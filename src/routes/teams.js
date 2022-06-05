@@ -1,29 +1,19 @@
 const {Router}=require('express')
 const router = Router()
-const Team = require('../models/Team')
+const controller = require('../controllers/teams.js')
 
 
-router.get('/', async (req, res)=>{
-  const Teams = await Team.find()
-  res.status(200).json(Teams) })
+router.get('/', controller.getTeam )
 
-router.post('/', async (req, res)=>{
-  console.log(req.body)
-  const {name, group}=req.body
-  const newTeam=new Team({name, group})
-  await newTeam.save()
-  res.status(201).json({"message":"Equipo guardado"})})
+router.get('/:id', controller.getTeamById)
 
-router.put('/', (req, res)=>{
- console.log(req.body)
- res.status(200).json(req.body)})
+router.post('/', controller.addTeam )
 
-router.delete('/:id', (req, res)=>{
- console.log(req.params.id)
- res.status(200).send("Elemento "+ req.params.id + " borrado")})
+router.put('/:id', controller.updateTeam)
 
+router.delete('/:id', controller.deleteTeam )
 
-// router.get('/', (req, res)=>{res.send('<h2>Servidor corriendo</h2>')  })
-// router.get('/', (req, res)=>{res.send('<h2>Servidor corriendo</h2>')  })
+router.delete('/', controller.deleteAllTeam )
+
 
 module.exports= router
