@@ -2,13 +2,16 @@ const {Schema, model}= require('mongoose')
 
 const GameSchema= new Schema({
     gameNumber:{type:Number,required:true},
+    phase:{type:Number, required:true},
     localTeam: {type:String, required:true},
-    visitTeam:{type:String, default:true},
-    localScore:{type:Number, default:true},
-    visitScore:{type:Number, default:true},
+    visitTeam:{type:String, required:true},
+    localScore:{type:Number, default:-1},
+    visitScore:{type:Number, default:-1},
     played:{type:Boolean, default:false},
     created_at:{type:Date, default:Date.now}
 }, 
 {versionKey:false})  // elimina __v el cual es un versionado por defecto de mongoose (por el momento no funciona)
+
+// por defecto un resultado en -1 significa que el juego no se ha realizado, además se tiene tambien la propieddd played para ese fin
 
 module.exports = model('Game', GameSchema)

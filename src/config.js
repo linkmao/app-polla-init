@@ -1,0 +1,1 @@
+module.exports = {secretword:"Palabra que solo yo conozco"}
