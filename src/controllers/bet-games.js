@@ -16,7 +16,6 @@ const getBetGameById=async (req, res)=>{
 }  
 
 
-
 const addMeBetGame = async (req, res)=>{
     const {idGame, localScore, visitScore, analogScore, phase}=req.body
     const newMeBet=new BetGame({idUser:req.userId,idGame ,localScore, visitScore, analogScore, phase})

@@ -7,6 +7,7 @@ const GameSchema= new Schema({
     visitTeam:{type:String, required:true},
     localScore:{type:Number, default:-1},
     visitScore:{type:Number, default:-1},
+    analogScore:{type:String, default:"-1"}, // Despues que un juego se actualiza, esta propiedad será L, E, V 
     played:{type:Boolean, default:false},
     created_at:{type:Date, default:Date.now}
 }, 

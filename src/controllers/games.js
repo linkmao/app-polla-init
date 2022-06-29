@@ -1,4 +1,5 @@
 const Game = require('../models/Game')
+const {calculatePointByGame} = require('../logic/logic')
 
 const  getGames = async (req, res)=>{
   const Games = await Game.find()
@@ -16,11 +17,22 @@ const addGame = async (req, res)=>{
     await newGame.save()
     res.status(201).json({"message":"Juego guardado"})}
 
+
+// La funcion updateGame, tiene dos usos 1) actualizar el juego a Jugado y ejecutar la funcion calcilatePointByGame el cual calcula en todas las apuestas asociadas al juego actualizado, el puntaje ganado, para acceder esta funcionalidad se debe enviar por json el parametro forCalculate en true.
+
+// 2) Actualizar o modificar cualquier juego, en cualquiera de sus parametros, pero no ejecuta calculo alguno de puntajes
+
 const updateGame  = async (req, res)=>{
-  const gameUpdate = await Game.findByIdAndUpdate(req.params.id, req.body,{new:true}) 
-  // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
-  res.status(200).json(gameUpdate)
+  if (req.body.forCalculate ) {
+    const {localScore, visitScore, analogScore} = req.body
+    const gameUpdate = await Game.findByIdAndUpdate(req.params.id, {localScore,visitScore, analogScore, played:true},{new:true})
+    res.status(200).json(gameUpdate)
+    await calculatePointByGame(req.params.id,localScore,visitScore,analogScore)
+    } else {
+     const gameUpdate = await Game.findByIdAndUpdate(req.params.id, req.body,{new:true}) 
+     res.status(200).json(gameUpdate)
   }
+ }
 
 const deleteGame = async (req, res)=>{
         await Game.findByIdAndDelete(req.params.id)
