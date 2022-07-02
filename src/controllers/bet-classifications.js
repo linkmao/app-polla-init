@@ -15,14 +15,14 @@ const getClassificationById=async (req, res)=>{
 }  
 
 const addMeClassification = async (req, res)=>{
-    const {firstTeam, secondTeam, thirdTeam}=req.body
-    const newMeClassification=new BetClassification({idUser:req.userId,firstTeam, secondTeam, thirdTeam})
+    const {group, firstTeam, secondTeam, thirdTeam}=req.body
+    const newMeClassification=new BetClassification({idUser:req.userId,group, firstTeam, secondTeam, thirdTeam})
     await newMeClassification.save()
     res.status(201).json(newMeClassification)}
 
 const addClassification = async (req,res)=>{
-  const {firstTeam, secondTeam, thirdTeam}=req.body
-  const newClassification=new BetClassification({idUser:req.params.iduser,firstTeam, secondTeam, thirdTeam})
+  const {group, firstTeam, secondTeam, thirdTeam}=req.body
+  const newClassification=new BetClassification({idUser:req.params.iduser,group, firstTeam, secondTeam, thirdTeam})
   await newClassification.save()
   res.status(201).json(newClassification)
 }

@@ -26,7 +26,7 @@ const signIn = async (req, res)=>{
     if (matchPass){
     const token = jwt.sign({id:userFound._id}, 
     config.secretword,
-    {expiresIn:24*60*60})  // Se configura para que el token solo dure un dia (puede ser menos)
+    {expiresIn:configapp.tokenDuration})  // Se configura para que el token solo dure un dia (puede ser menos)
     // Retorno el token
     res.status(200).json({token})
     }
