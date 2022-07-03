@@ -12,8 +12,8 @@ const getGameById=async (req, res)=>{
 
 const addGame = async (req, res)=>{
     console.log(req.body)
-    const {gameNumber, localTeam, visitTeam, localScore, visitScore}=req.body
-    const newGame=new Game({gameNumber, localTeam, visitTeam, localScore, visitScore})
+    const {gameNumber, localTeam, visitTeam, phase}=req.body
+    const newGame=new Game({gameNumber, localTeam, visitTeam, phase})
     await newGame.save()
     res.status(201).json({"message":"Juego guardado"})}
 
@@ -27,7 +27,7 @@ const updateGame  = async (req, res)=>{
     const {localScore, visitScore, analogScore} = req.body
     const gameUpdate = await Game.findByIdAndUpdate(req.params.id, {localScore,visitScore, analogScore, played:true},{new:true})
     res.status(200).json(gameUpdate)
-    await calculatePointByGame(req.params.id,localScore,visitScore,analogScore)
+    await calculatePointByGame(req.params.id)
     } else {
      const gameUpdate = await Game.findByIdAndUpdate(req.params.id, req.body,{new:true}) 
      res.status(200).json(gameUpdate)

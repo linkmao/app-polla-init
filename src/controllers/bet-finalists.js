@@ -15,26 +15,26 @@ const getFinalistById=async (req, res)=>{
 }  
 
 const addMeFinalist = async (req, res)=>{
-    const {first, second, third, fourth}=req.body
-    const newMeFinalist=new BetFinalists({idUser:req.userId,first, second, third, fourth})
+    const {firstTeam, secondTeam, thirdTeam, fourthTeam}=req.body
+    const newMeFinalist=new BetFinalists({idUser:req.userId,firstTeam, secondTeam, thirdTeam, fourthTeam})
     await newMeFinalist.save()
     res.status(201).json(newMeFinalist)}
 
 const addFinalist = async (req,res)=>{
-  const {first, second, third, fourth}=req.body
-  const newFinalist=new BetFinalists({idUser:req.params.iduser,first, second, third, fourth})
+  const {firstTeam, secondTeam, thirdTeam, fourthTeam}=req.body
+  const newFinalist=new BetFinalists({idUser:req.params.iduser,firstTeam, secondTeam, thirdTeam, fourthTeam})
   await newFinalist.save()
   res.status(201).json(newFinalist)
 }
 
 const updateMeFinalist  = async (req, res)=>{
-  const meFinalistUpdated = await BetFinalists.findOneAndUpdate( {idUser:req.userId, _id:req.params.id, }, req.body,{new:true}) 
+  const meFinalistUpdated = await BetFinalists.findOneAndUpdate( {idUser:req.userId, _id:req.params.id }, req.body,{new:true}) 
   // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
   res.status(200).json(meFinalistUpdated)
 }
 
 const updateFinalist= async(req,res)=>{
-  const finalistUpdated = await BetFinalists.findOneAndUpdate({_id:req.params.id, }, req.body,{new:true}) 
+  const finalistUpdated = await BetFinalists.findOneAndUpdate({_id:req.params.id }, req.body,{new:true}) 
   // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
   res.status(200).json(finalistUpdated)
 }

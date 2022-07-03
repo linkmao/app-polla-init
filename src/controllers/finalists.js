@@ -1,4 +1,5 @@
 const Finalists = require('../models/Finalist')
+const {calculatePointByFinalists} = require ('../logic/logic')
 
 const  getFinalists = async (req, res)=>{
   const finalists = await Finalists.find()
@@ -8,12 +9,15 @@ const addFinalists = async (req, res)=>{
     console.log(req.body)
     const newFinalists=new Finalists(req.body)
     await newFinalists.save()
-    res.status(201).json({"message":"Finalistas guardado"})}
+    res.status(201).json({"message":"Finalistas guardado"})
+    calculatePointByFinalists()
+  }
 
 const updateFinalists  = async (req, res)=>{
   const finalistsUpdate = await Finalists.findByIdAndUpdate (req.params.id, req.body,{new:true}) 
   // esa pequea configuraicion es para que mongo de vuelva el objeto actualizado
   res.status(200).json(finalistsUpdate)
+  calculatePointByFinalists()
   }
 
 const deleteFinalists= async(req, res)=>{

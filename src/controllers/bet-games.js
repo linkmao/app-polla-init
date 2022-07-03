@@ -1,4 +1,6 @@
 const BetGame = require('../models/Bet-game')
+const configApp = require('../../config')
+const { phaseEighth } = require('../../config')
 
 
 const getAllBets = async (req,res)=>{
@@ -17,16 +19,33 @@ const getBetGameById=async (req, res)=>{
 
 
 const addMeBetGame = async (req, res)=>{
+   console.log(req.body.phase)
+    if (req.body.phase==configApp.phaseInitial || req.body.phase==configApp.phaseEighth)
+    {
     const {idGame, localScore, visitScore, analogScore, phase}=req.body
     const newMeBet=new BetGame({idUser:req.userId,idGame ,localScore, visitScore, analogScore, phase})
     await newMeBet.save()
-    res.status(201).json(newMeBet)}
+    res.status(201).json(newMeBet)
+    } else {
+      const {idGame, localScore, visitScore, analogScore, phase, localTeam, visitTeam}=req.body
+      const newMeBet=new BetGame({idUser:req.userId,idGame ,localScore, visitScore, analogScore, phase, localTeam, visitTeam})
+    await newMeBet.save()
+    res.status(201).json(newMeBet)
+    }
+  }
 
 const addBetGame = async (req,res)=>{
-  const {idGame, localScore, visitScore, analogScore, path}=req.body
-  const newBet=new BetGame({idUser:req.params.iduser,idGame ,localScore, visitScore, analogScore, path})
+  if (req.body.phase==configApp.phaseInitial||req.body.phase==phaseEighth){
+  const {idGame, localScore, visitScore, analogScore, phase}=req.body
+  const newBet=new BetGame({idUser:req.params.iduser,idGame ,localScore, visitScore, analogScore, phase})
   await newBet.save()
   res.status(201).json(newBet)
+  } else{
+  const {idGame, localScore, visitScore, analogScore, phase, visitTeam, localTeam}=req.body
+  const newBet=new BetGame({idUser:req.params.iduser,idGame ,localScore, visitScore, analogScore, phase, visitTeam, localTeam})
+  await newBet.save()
+  res.status(201).json(newBet)
+  } 
 }
 
 const updateMeBetGame  = async (req, res)=>{

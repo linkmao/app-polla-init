@@ -2,10 +2,10 @@ const {Schema, model}= require('mongoose')
 
 const betFinalist = new Schema({
 idUser:{type:String, required:true},
-first:{type:String,required:true},
-second:{type:String,required:true},
-third:{type:String,required:true},
-fourth:{type:String,required:true},
+firstTeam:{type:String,required:true},
+secondTeam:{type:String,required:true},
+thirdTeam:{type:String,required:true},
+fourthTeam:{type:String,required:true},
 earnedScore:{type:Number, default:0},
 created_at:{type:Date, default:Date.now}
 },

@@ -1,10 +1,10 @@
 const {Schema, model}= require('mongoose')
 
 const FinalistsSchema= new Schema({
-    first:{type:String, required:true},
-    second:{type:String, required:true},
-    third:{type:String, required:true},
-    fourth:{type:String, required:true},
+    firstTeam:{type:String, required:true},
+    secondTeam:{type:String, required:true},
+    thirdTeam:{type:String, required:true},
+    fourthTeam:{type:String, required:true},
     created_at:{type:Date, default:Date.now}
 }, 
 {versionKey:false})  // elimina __v el cual es un versionado por defecto de mongoose (por el momento no funciona)
