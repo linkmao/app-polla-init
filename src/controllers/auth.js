@@ -1,7 +1,7 @@
 const User = require ('../models/User.js')
 const jwt = require('jsonwebtoken')
 const config = require('../config')
-const configapp= require('../../config')
+
 
 const signUp = async (req,res)=>{
   const {email, pass, name, lastName, phone}= req.body
@@ -10,13 +10,14 @@ const signUp = async (req,res)=>{
   // Luego que se crea el usuario se le entrega un token, de esa manera ya queda logueado
   const token = jwt.sign({id:newUser._id}, 
     config.secretword,
-    {expiresIn:configapp.tokenDuration})  // Se configura para que el token solo dure un dia (puede ser menos)
+    {expiresIn:config.tokenDuration})  // Se configura para que el token solo dure un dia (puede ser menos)
     // Retorno el token
     res.status(200).json({token})
 }
 
 const signIn = async (req, res)=>{
   const {email, pass}= req.body
+  console.log(email, pass)
   const userFound= await User.findOne({email})
   if (!userFound) { 
    res.status(400).json({message:"Usuario no registrado"})
@@ -26,7 +27,7 @@ const signIn = async (req, res)=>{
     if (matchPass){
     const token = jwt.sign({id:userFound._id}, 
     config.secretword,
-    {expiresIn:configapp.tokenDuration})  // Se configura para que el token solo dure un dia (puede ser menos)
+    {expiresIn:config.tokenDuration})  // Se configura para que el token solo dure un dia (puede ser menos)
     // Retorno el token
     res.status(200).json({token})
     }

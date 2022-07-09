@@ -5,7 +5,7 @@ const betFinalist = require('../models/Bet-finalist')
 const game= require('../models/Game')
 const classification= require('../models/Classification')
 const finalist = require('../models/Finalist')
-const configApp = require('../../config')
+const config = require('../config')
 
 
 // Funcion que permite calcular en cada apuesta que tenga el idGame enviado, el puntaje ganado, ademas guarda el puntaje en earnedScore 
@@ -15,14 +15,14 @@ betGames = await betGame.find({idGame:id})
 betGames.forEach(async e=>{
 // Analisis por puntaje y por localia
 let partialPoint = 0
-if (games[0].localScore==e.localScore && games[0].visitScore==e.visitScore) {partialPoint+=configApp.pointByScore}
-if (games[0].analogScore==e.analogScore) {partialPoint+=configApp.pointByAnalogScore}
+if (games[0].localScore==e.localScore && games[0].visitScore==e.visitScore) {partialPoint+=config.pointByScore}
+if (games[0].analogScore==e.analogScore) {partialPoint+=config.pointByAnalogScore}
 // Si el juego es de cuartos, semi-final, tercer-cuarto, y final se gana puntaje por equipo acertado en la clasificacion de cada etapa
-if (games[0].phase==configApp.phaseFourth || games[0].phase==configApp.phaseSemiFinals ||
-  games[0].phase==configApp.phaseThirdFouth || games[0].phase==configApp.phaseFinal)
+if (games[0].phase==config.phaseFourth || games[0].phase==config.phaseSemiFinals ||
+  games[0].phase==config.phaseThirdFouth || games[0].phase==config.phaseFinal)
 {
-  if (e.localTeam==games[0].localTeam) {partialPoint+=configApp.pointByTeamOrder}
-  if (e.visitTeam==games[0].visitTeam) {partialPoint+=configApp.pointByTeamOrder}
+  if (e.localTeam==games[0].localTeam) {partialPoint+=config.pointByTeamOrder}
+  if (e.visitTeam==games[0].visitTeam) {partialPoint+=config.pointByTeamOrder}
 }
 await betGame.findOneAndUpdate( {_id:e._id }, {earnedScore:partialPoint}) 
 console.log('puntos del juego '+e.idGame+' en la apuesta '+ e._id+ ' es: ' +partialPoint )
@@ -41,10 +41,10 @@ const  betClassifications= await betClassification.find({group:groupUpdate})
  let partialPoint=0
  // Compara el primer equpo apostado del jugador con los de la clasificacion verdadera y se hace el analisis del orden
 if (e.firstTeam==classifications[0].firstTeam){  // Se usa [0] ya que se tiene un array y este debe acceder a su primer y único elemento (es de esperarse que no hayan mas pues solo hay un documento de clasificado por grupo)
-  partialPoint+=configApp.pointByClassificationOrder
+  partialPoint+=config.pointByClassificationOrder
 } else {
   if (e.firstTeam==classifications[0].secondTeam){
-  partialPoint+=configApp.pointByClassificatioNoOrder
+  partialPoint+=config.pointByClassificatioNoOrder
   } else {
   partialPoint+=0
   }
@@ -52,10 +52,10 @@ if (e.firstTeam==classifications[0].firstTeam){  // Se usa [0] ya que se tiene u
 
 // Compara el segundo equipo apostado del jugador con los de la clasificacion verdadera y se hace el analisis del orden
 if (e.secondTeam==classifications[0].secondTeam){
-  partialPoint+=configApp.pointByClassificationOrder
+  partialPoint+=config.pointByClassificationOrder
 } else {
   if (e.secondTeam==classifications[0].firstTeam){
-  partialPoint+=configApp.pointByClassificatioNoOrder
+  partialPoint+=config.pointByClassificatioNoOrder
   } else {
   partialPoint+=0
   }
@@ -70,10 +70,10 @@ const calculatePointByFinalists = async() =>{
  const betFinalists = await betFinalist.find()
  betFinalists.forEach(async e =>{
  let partialPoint=0
- if (finalists[0].firstTeam == e.firstTeam) {partialPoint+=configApp.pointByFinalistFirstTeam}
- if (finalists[0].secondTeam == e.secondTeam) {partialPoint+=configApp.pointByFinalistSecondTeam}
- if (finalists[0].thirdTeam == e.thirdTeam) {partialPoint+=configApp.pointByFinalistThirdTeam}
- if (finalists[0].fourthTeam == e.fourthTeam) {partialPoint+=configApp.pointByFinalistFourthTeam}
+ if (finalists[0].firstTeam == e.firstTeam) {partialPoint+=config.pointByFinalistFirstTeam}
+ if (finalists[0].secondTeam == e.secondTeam) {partialPoint+=config.pointByFinalistSecondTeam}
+ if (finalists[0].thirdTeam == e.thirdTeam) {partialPoint+=config.pointByFinalistThirdTeam}
+ if (finalists[0].fourthTeam == e.fourthTeam) {partialPoint+=config.pointByFinalistFourthTeam}
  await betFinalist.findOneAndUpdate( {_id:e._id }, {earnedScore:partialPoint}) 
  })
 }

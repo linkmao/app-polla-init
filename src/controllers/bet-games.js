@@ -1,6 +1,6 @@
 const BetGame = require('../models/Bet-game')
-const configApp = require('../../config')
-const { phaseEighth } = require('../../config')
+const config = require('../config')
+
 
 
 const getAllBets = async (req,res)=>{
@@ -20,7 +20,7 @@ const getBetGameById=async (req, res)=>{
 
 const addMeBetGame = async (req, res)=>{
    console.log(req.body.phase)
-    if (req.body.phase==configApp.phaseInitial || req.body.phase==configApp.phaseEighth)
+    if (req.body.phase==config.phaseInitial || req.body.phase==config.phaseEighth)
     {
     const {idGame, localScore, visitScore, analogScore, phase}=req.body
     const newMeBet=new BetGame({idUser:req.userId,idGame ,localScore, visitScore, analogScore, phase})
@@ -35,7 +35,7 @@ const addMeBetGame = async (req, res)=>{
   }
 
 const addBetGame = async (req,res)=>{
-  if (req.body.phase==configApp.phaseInitial||req.body.phase==phaseEighth){
+  if (req.body.phase==config.phaseInitial||req.body.phase==phaseEighth){
   const {idGame, localScore, visitScore, analogScore, phase}=req.body
   const newBet=new BetGame({idUser:req.params.iduser,idGame ,localScore, visitScore, analogScore, phase})
   await newBet.save()

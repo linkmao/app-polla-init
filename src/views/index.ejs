@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+</head>
+
+
+<body>
+<div class="container-fluid">
+  <div class="row bg-dark">
+    <div class="col">
+      <img src="../img/caratula.png" alt="Caratula inicial">
+    </div>
+    <div class="col">
+ 
+      <form action="/api/auth/signin" method="POST">
+        <div class="mb-3">
+          <label for="email" class="form-label">Correo</label>
+          <input type="email" class="form-control" name="email" placeholder="Tu correo">
+        </div>
+        <div class="mb-3">
+          <label for="pass" class="form-label">Contraseña</label>
+          <input type="password" class="form-control" name="pass" placeholder="password">
+        </div>
+        <div class="row">
+          <button type ="submit" class="btn btn-primary mb-3">Ingresa</button>
+         </div>
+        </form>
+      <a  class="btn btn-primary mb-3" href="signup">Registro</a>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

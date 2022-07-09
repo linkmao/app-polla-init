@@ -1,11 +1,12 @@
 # APP POLLA
 
+## IMPORTANTE (09 julio 2022)
+En esta etapa del proceso, queda en la rama `master` y se iniciará una nueva rama `alpha` la razon es que la nueva rama usará la metodologia de login con passport y se hará uso del motor de plantilla handlebars, tomando como base el proyecto [login-notes](../login-notes/readme.md), el cual permite entre otras cosas la opcion de logout
+
+Esta rama `master` que hasta acá queda hace uso de autenticacion con jsonwebtoken, el cual permite generar un token al momento que el usuario se loguea, ese token trae encriptado el id del usuario y con ese id del usuario ya se puede hacer uso de todos los recursos. Dejé esta rama hasta acá con el objetivo que en el futuro pueda hacer una implementación de como iba en esta rama. Además el plateamiento que se tenia era con el uso del motor de plantilla `ejs`
+
 
 ## Apuntes básicos
-
-Meta actual, realzar la encriptacion de la contraseañ
-
-
 
 Flujo de desarrollo
 - Diseño de los modelos de bases de datos
@@ -15,7 +16,9 @@ Flujo de desarrollo
 - Desarrollo de la autenticacion
 - Desarrollo de los roles
 - Desarrollo de modelo apuestas, ya que como hay autenticación entonces las apuestas queda vinculado a la persona logueada
-
+- Desarrollo de la logica del juego
+- Diseño del frontend
+    - Se instala boostrap y ejs
 ## Diseño de las funciones que permiten la lógica del juego
 - Funcion que cuando el ADMON cargue resultado de partido, calcule el puntaje ganado por cada jugador
 

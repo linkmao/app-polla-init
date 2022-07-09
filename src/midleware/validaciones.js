@@ -28,4 +28,11 @@ const validityEmail = async (req,res,next)=>{
     next()
 }
 
-module.exports={verifyToken, isAdmin, validityEmail}
+// Valida que las dos contraseñas sean iguales al momento del registro
+const validyPass = (req,res,next)=>{
+    const {pass, passVerify}= req.body
+    if (pass !== passVerify) return res.status(400).json({message:'Contraseñas no coinciden'})
+    next() 
+}
+
+module.exports={verifyToken, isAdmin, validityEmail, validyPass}
