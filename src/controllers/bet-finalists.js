@@ -6,7 +6,7 @@ const getAllFinalists = async (req,res)=>{
 }
 
 const  getMeFinalists = async (req, res)=>{
-  const meFinalists = await BetFinalists.find({idUser:req.userId})
+  const meFinalists = await BetFinalists.find({idUser:req.user.id})
   res.status(200).json(meFinalists) }
 
 const getFinalistById=async (req, res)=>{
@@ -16,7 +16,7 @@ const getFinalistById=async (req, res)=>{
 
 const addMeFinalist = async (req, res)=>{
     const {firstTeam, secondTeam, thirdTeam, fourthTeam}=req.body
-    const newMeFinalist=new BetFinalists({idUser:req.userId,firstTeam, secondTeam, thirdTeam, fourthTeam})
+    const newMeFinalist=new BetFinalists({idUser:req.user.id,firstTeam, secondTeam, thirdTeam, fourthTeam})
     await newMeFinalist.save()
     res.status(201).json(newMeFinalist)}
 
@@ -28,7 +28,7 @@ const addFinalist = async (req,res)=>{
 }
 
 const updateMeFinalist  = async (req, res)=>{
-  const meFinalistUpdated = await BetFinalists.findOneAndUpdate( {idUser:req.userId, _id:req.params.id }, req.body,{new:true}) 
+  const meFinalistUpdated = await BetFinalists.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id }, req.body,{new:true}) 
   // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
   res.status(200).json(meFinalistUpdated)
 }
@@ -40,19 +40,19 @@ const updateFinalist= async(req,res)=>{
 }
 
 const deleteMeFinalist = async (req, res)=>{
-        const finalistMeDeleted= await BetFinalists.findOneAndDelete({idUser:req.userId, _id:req.params.id})
-        // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.userId + " ha sido borrado" )
+        const finalistMeDeleted= await BetFinalists.findOneAndDelete({idUser:req.user.id, _id:req.params.id})
+        // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.user.id + " ha sido borrado" )
         res.status(200).json(finalistMeDeleted)
 }
 
 const deleteAllMeFinalists= async(req, res)=>{
-  await BetFinalists.deleteMany({idUser:req.userId})
-  res.status(200).send('Todos las apuestas de finalistas del usuario '+ req.userId + " fueron borrados")
+  await BetFinalists.deleteMany({idUser:req.user.id})
+  res.status(200).send('Todos las apuestas de finalistas del usuario '+ req.user.id + " fueron borrados")
 }
 
 const deleteFinalist = async (req, res)=>{
   const finalistDeleted= await BetFinalists.findOneAndDelete({_id:req.params.id})
-  // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.userId + " ha sido borrado" )
+  // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.user.id + " ha sido borrado" )
   res.status(200).json(finalistDeleted)
 }
 

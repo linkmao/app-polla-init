@@ -1,6 +1,13 @@
 # APP POLLA
 
-## IMPORTANTE (09 julio 2022)
+## IMPORTANTE (09 julio 2022) texto nuevo con el que se inicia la rama alpha
+Doy inicio a la rama alpha, en donde se cambia la implementación de lo que se venia haciendo en master, la idea es que a futuro se pueda intervenir master, dandole continuidad a la impelmentacion del token tal como se venia desarrollando allí
+
+En esta rama lo que se va hacer es implementar `passaport`para lo correspondiente al inicio de sesion, tal como se hizo en el proyecto guia de Fazt [login-notes](../login-notes/readme.md).
+
+Comenzamos....
+
+## IMPORTANTE (09 julio 2022) texto con el que se cierra la rama master
 En esta etapa del proceso, queda en la rama `master` y se iniciará una nueva rama `alpha` la razon es que la nueva rama usará la metodologia de login con passport y se hará uso del motor de plantilla handlebars, tomando como base el proyecto [login-notes](../login-notes/readme.md), el cual permite entre otras cosas la opcion de logout
 
 Esta rama `master` que hasta acá queda hace uso de autenticacion con jsonwebtoken, el cual permite generar un token al momento que el usuario se loguea, ese token trae encriptado el id del usuario y con ese id del usuario ya se puede hacer uso de todos los recursos. Dejé esta rama hasta acá con el objetivo que en el futuro pueda hacer una implementación de como iba en esta rama. Además el plateamiento que se tenia era con el uso del motor de plantilla `ejs`

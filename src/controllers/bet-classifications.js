@@ -6,7 +6,7 @@ const getAllClassifications = async (req,res)=>{
 }
 
 const  getMeClassification = async (req, res)=>{
-  const meClassification = await BetClassification.find({idUser:req.userId})
+  const meClassification = await BetClassification.find({idUser:req.user.id})
   res.status(200).json(meClassification) }
 
 const getClassificationById=async (req, res)=>{
@@ -16,7 +16,7 @@ const getClassificationById=async (req, res)=>{
 
 const addMeClassification = async (req, res)=>{
     const {group, firstTeam, secondTeam, thirdTeam}=req.body
-    const newMeClassification=new BetClassification({idUser:req.userId,group, firstTeam, secondTeam, thirdTeam})
+    const newMeClassification=new BetClassification({idUser:req.user.id,group, firstTeam, secondTeam, thirdTeam})
     await newMeClassification.save()
     res.status(201).json(newMeClassification)}
 
@@ -28,7 +28,7 @@ const addClassification = async (req,res)=>{
 }
 
 const updateMeClassification  = async (req, res)=>{
-  const meClassificationUpdated = await BetClassification.findOneAndUpdate( {idUser:req.userId, _id:req.params.id, }, req.body,{new:true}) 
+  const meClassificationUpdated = await BetClassification.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true}) 
   // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
   res.status(200).json(meClassificationUpdated)
   }
@@ -40,19 +40,19 @@ const updateClassification= async(req,res)=>{
 }
 
 const deleteMeClassification = async (req, res)=>{
-        const classificationMeDeleted= await BetClassification.findOneAndDelete({idUser:req.userId, _id:req.params.id})
-        // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.userId + " ha sido borrado" )
+        const classificationMeDeleted= await BetClassification.findOneAndDelete({idUser:req.user.id, _id:req.params.id})
+        // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.user.id + " ha sido borrado" )
         res.status(200).json(classificationMeDeleted)
 }
 
 const deleteAllMeClassifications= async(req, res)=>{
-  await BetClassification.deleteMany({idUser:req.userId})
-  res.status(200).send('Todos las classificaciones del usuario '+ req.userId + " fueron borrados")
+  await BetClassification.deleteMany({idUser:req.user.id})
+  res.status(200).send('Todos las classificaciones del usuario '+ req.user.id + " fueron borrados")
 }
 
 const deleteClassification = async (req, res)=>{
   const classificationDeleted= await BetClassification.findOneAndDelete({_id:req.params.id})
-  // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.userId + " ha sido borrado" )
+  // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.user.id + " ha sido borrado" )
   res.status(200).json(classificationDeleted)
 }
 

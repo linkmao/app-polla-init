@@ -1,5 +1,5 @@
 const BetGame = require('../models/Bet-game')
-const config = require('../config')
+const config = require('../config/config')
 
 
 
@@ -9,7 +9,7 @@ const getAllBets = async (req,res)=>{
 }
 
 const  getMeBets = async (req, res)=>{
-  const bet = await BetGame.find({idUser:req.userId})
+  const bet = await BetGame.find({idUser:req.user.id})
   res.status(200).json(bet) }
 
 const getBetGameById=async (req, res)=>{
@@ -23,12 +23,12 @@ const addMeBetGame = async (req, res)=>{
     if (req.body.phase==config.phaseInitial || req.body.phase==config.phaseEighth)
     {
     const {idGame, localScore, visitScore, analogScore, phase}=req.body
-    const newMeBet=new BetGame({idUser:req.userId,idGame ,localScore, visitScore, analogScore, phase})
+    const newMeBet=new BetGame({idUser:req.user.id,idGame ,localScore, visitScore, analogScore, phase})
     await newMeBet.save()
     res.status(201).json(newMeBet)
     } else {
       const {idGame, localScore, visitScore, analogScore, phase, localTeam, visitTeam}=req.body
-      const newMeBet=new BetGame({idUser:req.userId,idGame ,localScore, visitScore, analogScore, phase, localTeam, visitTeam})
+      const newMeBet=new BetGame({idUser:req.user.id,idGame ,localScore, visitScore, analogScore, phase, localTeam, visitTeam})
     await newMeBet.save()
     res.status(201).json(newMeBet)
     }
@@ -49,7 +49,7 @@ const addBetGame = async (req,res)=>{
 }
 
 const updateMeBetGame  = async (req, res)=>{
-  const gameMeBetUpdate = await BetGame.findOneAndUpdate( {idUser:req.userId, _id:req.params.id, }, req.body,{new:true}) 
+  const gameMeBetUpdate = await BetGame.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true}) 
   // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
   res.status(200).json(gameMeBetUpdate)
   }
@@ -61,21 +61,21 @@ const updateBetGame= async(req,res)=>{
 }
 
 const deleteMeBetGame = async (req, res)=>{
-        const betMeErased= await BetGame.findOneAndDelete({idUser:req.userId, _id:req.params.id})
-        // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.userId + " ha sido borrado" )
+        const betMeErased= await BetGame.findOneAndDelete({idUser:req.user.id, _id:req.params.id})
+        // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.user.id + " ha sido borrado" )
         res.status(200).json(betMeErased)
 }
 
 const deleteBetGame = async (req, res)=>{
   const betErased= await BetGame.findOneAndDelete({_id:req.params.id})
-  // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.userId + " ha sido borrado" )
+  // res.status(200).send("Apuesta con id "+ req.params.id + " del jugador " + req.user.id + " ha sido borrado" )
   res.status(200).json(betErased)
 }
 
 
 const deleteAllMeBetGames= async(req, res)=>{
-  await BetGame.deleteMany({idUser:req.userId})
-  res.status(200).send('Todos las apuestas del jugador '+ req.userId + " fueron borrados")
+  await BetGame.deleteMany({idUser:req.user.id})
+  res.status(200).send('Todos las apuestas del jugador '+ req.user.id + " fueron borrados")
 }
 
 const deleteAllBetGameByIdUser = async (req,res)=>{

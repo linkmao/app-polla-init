@@ -1,6 +1,7 @@
 const dotenv=require('dotenv')
 const methodOverride = require('method-override')
 const express = require('express')
+const exphbs = require('express-handlebars') // Para el funcionamiento de handlebaras
 const morgan = require ('morgan')
 const teams= require('./routes/teams')
 const games= require('./routes/games')
@@ -12,32 +13,46 @@ const betGame=require('./routes/bet-games')
 const betClassification = require('./routes/bet-classifications')
 const betFinalists= require ('./routes/bet-finalists')
 const index= require('./routes/index')
-// Para el funcionamiento de ejs
-const ejs = require('ejs')
-const path= require('path')
+const flash = require ('connect-flash') // Para el envio de mensajes del backend al frontend
+const passport= require('passport') // Passport y sus dependencias auxiliares
+const session = require('express-session') // Passport y sus dependencias auxiliares
+const path= require('path') // para la obtencion de rutas del proyecto
 
 const app = express()
 dotenv.config() // Permite que funcionen las variables de entorno
 
 // Configuracion
-require('./database')
+require('./config/database') // codigo de configuracion base de datos
+require('./config/passport') // codigo de configuracion de passport
+
+//Settings
 app.set('port', process.env.PORT || 3000)
+app.set('views',path.join(__dirname,'views'))
+app.set('public',path.join(__dirname,'public'))
+
+// Configuracion del motor de plantilla html
+app.engine('.hbs',exphbs.engine({
+  defaultLayout:'main.hbs',
+  layoutsDir:path.join(app.get('views'),'layouts'),
+  partialDir:path.join(app.get('views'),'partials'),
+  extname:'.hbs'
+}))
+app.set('view engine','.hbs') // con esta linea queda lista la configuracion del motor de plantilla
 
 //Midleware
 app.use(morgan('dev')) // Permite monitorear el tipo de peticion que se estpa haciendo
 app.use(express.json()) // Permite que el servidor pueda responder con json
-
-// Configuracion de ejs
-app.set('views',path.join(__dirname,'views'))
-app.set('view engine','ejs' ) // configuracion para usar el motor de plantilla ejs para crear html
-app.use(express.static(path.join(__dirname,'public'))) //esta forma configuro express para que tenga una carpera estatica
-
-// Configuracion del backend para que reciba datos de los formularios desde el forntend
-app.use(express.urlencoded({extended:false})) // es el que permite e envio de datos de formularios al backend exntend false es para que solo el envio sea de texto
-app.use(methodOverride('_method'))
-
-
-console.log(path.join(__dirname,'public'))
+app.use(express.static(app.get('public'))) //Configuracion carpeta publica (archivos estaticos) 
+app.use(express.urlencoded({extended:false})) // envio de datos de fomrulario al backend
+app.use(methodOverride('_method')) //// envio de datos de fomrulario al backendn (para put y delete)
+app.use(session({
+  secret:'Estedebesersinespacio',
+  resave:true,
+  saveUninitialized:true
+}))  // Aun no comprendo bien para que es session
+app.use(passport.initialize()) // Para usa passport
+app.use(passport.session())  // para usar passport con session
+app.use(flash()) // Para el envio de mensajes
 
 //rutas
 app.use('/', index)
@@ -50,6 +65,7 @@ app.use('/api/auth', auth)
 app.use('/api/bet/games', betGame)
 app.use('/api/bet/classifications', betClassification)
 app.use('/api/bet/finalists', betFinalists)
+
 //Iniciode del servidor
 app.listen(app.get('port'), ()=>{console.log('app escuchando en el puerto '+ app.get('port'))})
 

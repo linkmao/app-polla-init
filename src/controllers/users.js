@@ -6,8 +6,8 @@ const getUsers=async (req, res)=>{
 }
 
 const getMe = async(req,res)=>{
-  console.log(req.userId)
-  const me= await User.findById(req.userId)
+  console.log(req.user.id)
+  const me= await User.findById(req.user.id)
   res.status(200).json(me)
 }
 
@@ -24,7 +24,7 @@ const updateUser  = async (req, res)=>{
   }
 
 const updateMe= async(req, res)=>{
-const meUpdate=await User.findByIdAndUpdate(req.userId, req.body,{new:true} )
+const meUpdate=await User.findByIdAndUpdate(req.user.id, req.body,{new:true} )
 res.status(200).json(meUpdate)
 }
 
@@ -38,7 +38,7 @@ const deleteAllUser= async(req, res)=>{
 }
 
 const deleteMe = async (req,res)=>{
-  const meDelete=await User.findByIdAndRemove(req.userId)
+  const meDelete=await User.findByIdAndRemove(req.user.id)
   res.status(200).json(meDelete)
 }
 

@@ -5,7 +5,7 @@ const betFinalist = require('../models/Bet-finalist')
 const game= require('../models/Game')
 const classification= require('../models/Classification')
 const finalist = require('../models/Finalist')
-const config = require('../config')
+const config = require('../config/config')
 
 
 // Funcion que permite calcular en cada apuesta que tenga el idGame enviado, el puntaje ganado, ademas guarda el puntaje en earnedScore 
