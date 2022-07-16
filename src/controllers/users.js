@@ -25,7 +25,8 @@ const updateUser  = async (req, res)=>{
 
 const updateMe= async(req, res)=>{
 const meUpdate=await User.findByIdAndUpdate(req.user.id, req.body,{new:true} )
-res.status(200).json(meUpdate)
+// res.status(200).json(meUpdate)
+res.status(200).redirect('/games')
 }
 
 const deleteUser = async (req, res)=>{
@@ -42,5 +43,23 @@ const deleteMe = async (req,res)=>{
   res.status(200).json(meDelete)
 }
 
+const updatePassword = async (req,res)=>{
+  const {actualPass, pass, verifyPass}= req.body
+  const user= await User.findOne({_id:req.user.id})  // Se hace la consulta para buscar si por lo menos el email existe
+  const match = await user.comparePass(actualPass) // Uso del metodo comparePass de la instancia user
+      if (match) {
+        console.log("SI puedes cambiar contraseña")
+        const passUpdated=await User.findByIdAndUpdate(req.user.id, {pass: await User.encryptPass(pass)},{new:true} )
+          // res.status(200).json(passUpdated)
+         req.flash('mensajeOk', 'Contraseña cambiada exitosamente')
+         res.status(200).redirect('/games')
+       } // si la contraseña coincide, se devuleve el usuario
+      else {
+        console.log("NO puede cambiar contraseña")
+        req.flash('mensajeError', 'Contraseña actual erronea')
+        res.status(200).redirect('/password')
+        } // Si no se devuelve false
+  }
 
-module.exports = {getUsers, getMe, getUsersById, updateUser,updateMe, deleteAllUser, deleteUser, deleteMe}
+
+module.exports = {getUsers, getMe, getUsersById, updateUser,updateMe, deleteAllUser, deleteUser, deleteMe, updatePassword}

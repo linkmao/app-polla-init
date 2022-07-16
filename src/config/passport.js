@@ -11,7 +11,7 @@ async (email, password, done) =>{
   const user= await User.findOne({email:email})  // Se hace la consulta para buscar si por lo menos el email existe
   if (!user) {
     console.log("correo no encontrado")
-    return done(null, false,{message:"Usuario no encontrado"})}
+    return done(null, false,{message:"Correo no encontrado"})}
   else {
     console.log(user)
       const match = await user.comparePass(password) // Uso del metodo comparePass de la instancia user
@@ -20,10 +20,10 @@ async (email, password, done) =>{
         return done(null,user)} // si la contraseña coincide, se devuleve el usuario
       else {
         console.log("contraseña no coinidente")
-        return done(null, false,{message:"Contraseña incorrecta"})} // Si no se devuelve false
+        return done(null, false,{message:"Contraseña no coincidente"})} // Si no se devuelve false
   }
-})
-)
+}))
+
 
 passport.serializeUser((user,done)=>{done(null,user.id)})  // Se almacena el id del usuario
 passport.deserializeUser((id,done)=>{// Toma el id del usuario logueado y guardado en serializeUser para tomar sus datos

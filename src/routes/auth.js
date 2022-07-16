@@ -4,13 +4,25 @@ const router = Router()
 const validar= require('../midleware/validaciones')
 const passport= require('passport')
 
-router.post('/signup', validar.validityEmail, validar.validyPass, auth.signUp)
+router.post('/signup',  validar.validyPass, validar.validityEmail,auth.signUp)
 // router.post('/signin', auth.signIn)
 
+
+// No se como poner a funcionar los mensajes flash con el uso de passport
 router.post('/signin',passport.authenticate('local',{
-  successRedirect:'../../ok',
-  failureRedirect:'../../notok',
-  failureFlash:false
-}))
+  successRedirect:'../../games',
+  failureRedirect:'../../',
+  failureFlash:true
+}), (req,res)=> {req.flash('mensajeError','Usuario o contraseña no valido')})
+
+// Desde la version 0.6 de passport, se requiere de un callback para logout, tal como se muestra en este codigo
+router.get('/logout',(req,res, next)=>{
+  req.logout(err=>{
+    if(err) {return next(err)}
+    res.redirect('/')
+  })
+})
+
+
 
 module.exports = router

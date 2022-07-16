@@ -2,17 +2,13 @@ const passport = require('passport')
 const User = require ('../models/User.js')
 
 const signUp = async (req,res)=>{
+  console.log("LLEGO AL FIN")
   const {email, pass, name, lastName, phone}= req.body
   const newUser=new User({email, pass:await User.encryptPass(pass) , name, lastName, phone})
   await newUser.save()
+   req.flash('mensajeOk','Registro exitoso. Inicia sesión')
    res.status(200).redirect('/')    // Luego de registrado se redirige a la pnatalla principal para que haga loguin, sin empbargoo luego lo haré oara que inmediatamente ingrese a su app
 }
-
-const signIn = ()=>{
-
-}
-
-
 
 // VERSION DE CODIGO CON JWEBTOKEN
 
@@ -57,4 +53,4 @@ const signIn = ()=>{
 // }
 
 
-module.exports = {signIn, signUp}
+module.exports =  {signUp}
