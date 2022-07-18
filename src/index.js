@@ -40,10 +40,10 @@ app.engine('.hbs', exphbs.engine({
 app.set('view engine', '.hbs') // con esta linea queda lista la configuracion del motor de plantilla
 
 //Midleware
-app.use(morgan('dev')) // Permite monitorear el tipo de peticion que se estpa haciendo
+// app.use(morgan('dev')) // Permite monitorear el tipo de peticion que se estpa haciendo
 app.use(express.json()) // Permite que el servidor pueda responder con json
 app.use(express.static(app.get('public'))) //Configuracion carpeta publica (archivos estaticos) 
-app.use(express.urlencoded({ extended: false })) // envio de datos de fomrulario al backend
+app.use(express.urlencoded({ extended: true })) // envio de datos de fomrulario al backend
 app.use(methodOverride('_method')) //// envio de datos de fomrulario al backendn (para put y delete)
 app.use(session({
   secret: 'Este es un texto cualquiera que deberia creo yo estar en una variable de entorno',
@@ -58,10 +58,14 @@ app.use(passport.session())  // para usar passport con session
 
 // Variables locales, estas variables son datos que se envian desde el backend y que podrán usarse en el frontend, ntese que esto es un midleware, significa que esta infomacion se actualiza despues de cada peticion de las rutas
 app.use((req, res, next) => {
+  console.log("CARPETA PUBLICA: ", app.get('public'))
   res.locals.mensajeError = req.flash('mensajeError')
   res.locals.mensajeOk = req.flash('mensajeOk')
   res.locals.localUsuario = req.user || null // Se guarda el user que envia passport, y se guarda en una variable local
-  // Cuando se quuiere acceder en handlebars a usuario.name, no permite su uso, entonces se guadan todos los datos de usuario en variables locales así como se muestra a continuación
+  res.locals.localBody=req.body || null
+  const temporal=res.locals.localBody
+  // console.log("BODY GUARDADO: ", temporal)
+   // Cuando se quuiere acceder en handlebars a usuario.name, no permite su uso, entonces se guadan todos los datos de usuario en variables locales así como se muestra a continuación
   if (res.locals.localUsuario != null) {
     const data = res.locals.localUsuario
     res.locals.localName = data.name
@@ -69,9 +73,24 @@ app.use((req, res, next) => {
     res.locals.localPhone = data.phone
     res.locals.localEmail = data.email
     res.locals.localId = data._id
+    res.locals.localAdmin = (data.role=='admin') ? data.role : null 
   }
+
+  // HASTA QUE NO TENGA UNA COMPRENSIÓN DE REQ RES EN LOS MIDDLEWARE ME CUESTA ESTA PEQUEÑA LOGICA PARA LA PERSISTENCIA DE DATOS
+  
+  // if (temporal.name=="Mauricio"){
+  //   console.log("NAME QUE VIENE DE BODY: ", temporal.name )
+  //   console.log("NOMBRE TEMPORAL: ", temporal.lastName)
+  //   res.locals.localInputName=temporal.name
+  //   res.locals.localInputLastName=temporal.lastName
+  // }
   next()
 })
+
+// app.use( (req, res, next)=> {
+//   console.log('Time:', Date.now());
+//   next();
+// })
 
 //rutas
 app.use('/', index)

@@ -2,6 +2,7 @@ const {Schema, model}= require('mongoose')
 
 const GameSchema= new Schema({
     gameNumber:{type:Number,required:true},
+    group:{type:String},
     phase:{type:Number, required:true},
     localTeam: {type:String, required:true},
     visitTeam:{type:String, required:true},

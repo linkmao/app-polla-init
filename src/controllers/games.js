@@ -3,11 +3,24 @@ const {calculatePointByGame} = require('../logic/logic')
 
 const  getGames = async (req, res)=>{
   const Games = await Game.find()
-  res.status(200).json(Games) }
+ res.json(Games)
+}
 
 const getGameById=async (req, res)=>{
   const GameById = await Game.findById(req.params.id)
   res.status(200).json(GameById) 
+}  
+
+const getGameByGroup=async (req, res)=>{
+  const gamebygroup = await Game.find({analogScore:req.params.g}).lean()
+  res.locals.juegos=gamebygroup
+  // console.log('res: ', res.locals.juegos)
+  // res.status(200).json(GameByGroup)
+  // res.json(GameByGroup)
+  // res.render('games',{gamebygroup})
+   
+  res.render('games',{gamebygroup})
+  // res.redirect('/games')
 }  
 
 const addGame = async (req, res)=>{
@@ -43,4 +56,4 @@ const deleteAllGames= async(req, res)=>{
   res.status(200).send('Todos los juegos fueron borrados')
 }
 
-module.exports = {getGames, addGame, updateGame, deleteGame, getGameById, deleteAllGames}
+module.exports = {getGames, addGame, updateGame, deleteGame, getGameById, deleteAllGames, getGameByGroup}

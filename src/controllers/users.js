@@ -62,4 +62,13 @@ const updatePassword = async (req,res)=>{
   }
 
 
-module.exports = {getUsers, getMe, getUsersById, updateUser,updateMe, deleteAllUser, deleteUser, deleteMe, updatePassword}
+  const restorePass=async (req,res)=>{
+     console.log("RESTAURANDO CONTRASEÑA")
+      const {id, pass}= req.body
+      const user= await User.findByIdAndUpdate(id,{pass:await User.encryptPass(pass)})
+      req.flash('mensajeOk', 'Contraseña restablecida para jugador: ', user.name)
+      res.status(200).redirect('/admin/pass-restore')
+  }
+
+
+module.exports = {getUsers, getMe, getUsersById, updateUser,updateMe, deleteAllUser, deleteUser, deleteMe, updatePassword, restorePass}
