@@ -1,13 +1,28 @@
 const passport = require('passport')
-const User = require ('../models/User.js')
+const User = require ('../models/User')
+const Game = require('../models/Game')
+const betGame=require('../models/Bet-game')
+const config=require('../config/config')
+const BetGame = require('../models/Bet-game')
+
 
 const signUp = async (req,res)=>{
-  console.log("LLEGO AL FIN")
   const {email, pass, name, lastName, phone}= req.body
   const newUser=new User({email, pass:await User.encryptPass(pass) , name, lastName, phone})
   await newUser.save()
-   req.flash('mensajeOk','Registro exitoso. Inicia sesión')
-   res.status(200).redirect('/')    // Luego de registrado se redirige a la pnatalla principal para que haga loguin, sin empbargoo luego lo haré oara que inmediatamente ingrese a su app
+
+// La siguiente seccion de codigo lo que hace es generar la estructura de la apuesta inicial para el jugador recien logueado, se espera el futuras versiones hacer esta implementacion en un midleware independinete
+  
+  const games = await Game.find({phase:config.phaseInitial})
+  console.log (games)
+  games.forEach( async (e,i)=>{
+  const newBetGame=new BetGame({idGame:e._id,idUser:newUser._id, localTeam:e.localTeam, visitTeam:e.visitTeam, localScore:e.localScore, visitScore:e.visitScore, analogScore:e.analogScore})
+  await newBetGame.save()
+  })
+  
+  req.flash('mensajeOk','Registro exitoso. Inicia sesión')
+  res.status(200).redirect('/')    // Luego de registrado se redirige a la pnatalla principal para que haga loguin, sin empbargoo luego lo haré oara que inmediatamente ingrese a su app
+  
 }
 
 // VERSION DE CODIGO CON JWEBTOKEN

@@ -23,12 +23,12 @@ const addMeBetGame = async (req, res)=>{
     if (req.body.phase==config.phaseInitial || req.body.phase==config.phaseEighth)
     {
     const {idGame, localScore, visitScore, analogScore, phase}=req.body
-    const newMeBet=new BetGame({idUser:req.user.id,idGame ,localScore, visitScore, analogScore, phase})
+    const newMeBet=new BetGame({idUser:req.user.id,idGame ,localScore, visitScore, analogScore})
     await newMeBet.save()
     res.status(201).json(newMeBet)
     } else {
-      const {idGame, localScore, visitScore, analogScore, phase, localTeam, visitTeam}=req.body
-      const newMeBet=new BetGame({idUser:req.user.id,idGame ,localScore, visitScore, analogScore, phase, localTeam, visitTeam})
+      const {idGame, localScore, visitScore, analogScore, localTeam, visitTeam}=req.body
+      const newMeBet=new BetGame({idUser:req.user.id,idGame ,localScore, visitScore, analogScore,  localTeam, visitTeam})
     await newMeBet.save()
     res.status(201).json(newMeBet)
     }
@@ -36,13 +36,13 @@ const addMeBetGame = async (req, res)=>{
 
 const addBetGame = async (req,res)=>{
   if (req.body.phase==config.phaseInitial||req.body.phase==phaseEighth){
-  const {idGame, localScore, visitScore, analogScore, phase}=req.body
-  const newBet=new BetGame({idUser:req.params.iduser,idGame ,localScore, visitScore, analogScore, phase})
+  const {idGame, localScore, visitScore, analogScore}=req.body
+  const newBet=new BetGame({idUser:req.params.iduser,idGame ,localScore, visitScore, analogScore})
   await newBet.save()
   res.status(201).json(newBet)
   } else{
-  const {idGame, localScore, visitScore, analogScore, phase, visitTeam, localTeam}=req.body
-  const newBet=new BetGame({idUser:req.params.iduser,idGame ,localScore, visitScore, analogScore, phase, visitTeam, localTeam})
+  const {idGame, localScore, visitScore, analogScore, visitTeam, localTeam}=req.body
+  const newBet=new BetGame({idUser:req.params.iduser,idGame ,localScore, visitScore, analogScore, visitTeam, localTeam})
   await newBet.save()
   res.status(201).json(newBet)
   } 
