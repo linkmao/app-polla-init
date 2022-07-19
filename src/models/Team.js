@@ -3,6 +3,7 @@ const {Schema, model}= require('mongoose')
 const TeamSchema= new Schema({
     name:{type:String,required:true },
     group: {type:String, required:true},
+    tag:{type:String},
     active:{type:Boolean, default:true},
     created_at:{type:Date, default:Date.now}
 }, 

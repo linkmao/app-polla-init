@@ -13,7 +13,7 @@ const betClassification = require('./routes/bet-classifications')
 const betFinalists= require ('./routes/bet-finalists')
 const index= require('./routes/index')
 // Para el funcionamiento de ejs
-const ejs = require('ejs')
+
 const path= require('path')
 
 const app = express()
