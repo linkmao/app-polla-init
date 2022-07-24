@@ -13,7 +13,7 @@ async (email, password, done) =>{
     console.log("correo no encontrado")
     return done(null, false,{message:"Correo no encontrado"})}
   else {
-    console.log(user)
+    // console.log(user)
       const match = await user.comparePass(password) // Uso del metodo comparePass de la instancia user
       if (match) {
         console.log("logueado")

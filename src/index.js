@@ -58,7 +58,6 @@ app.use(passport.session())  // para usar passport con session
 
 // Variables locales, estas variables son datos que se envian desde el backend y que podrán usarse en el frontend, ntese que esto es un midleware, significa que esta infomacion se actualiza despues de cada peticion de las rutas
 app.use((req, res, next) => {
-  console.log("CARPETA PUBLICA: ", app.get('public'))
   res.locals.mensajeError = req.flash('mensajeError')
   res.locals.mensajeOk = req.flash('mensajeOk')
   res.locals.localUsuario = req.user || null // Se guarda el user que envia passport, y se guarda en una variable local

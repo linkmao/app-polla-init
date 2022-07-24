@@ -47,3 +47,30 @@ De igual manera, para el inicio de la segunda fase, cada apostador tendrá la ap
 ## Para futuras versiones
 -En la inserscion de datos desde admin, si estos se van hacer desde postman debo crear una capa de verificacion que permita por ejemplo validar que los id que se incorporan desde la url si existan en su respectiva base de datos
 
+
+## Adefecio en el filtrado de apuestas por grupo ruta /groups/:g
+A la fecha de escritura de este reporte (24 de julio de 2022) este fue uno de las implementaciones que mayor dificultad se me generó. Lo exoplico a continuación
+
+### Objetivo:
+El objetivo es que luego de que el usuario esté logueado e ingrese a sus juegos, pueda ver las apuestas (betGame) asociadas a su id, previamente filtrada por grupo, esto es que por ejemplo solo haya un get de las apuestas del grupo C y por lo tanto se renderice en pantalla las 6 apuestas correspondientes.
+
+### Que se requiere:
+Recoredemos la estructura de los modelos (solo se relaciona las propiedades mas relevantes para este caso)
+- Team (admin): tiene el nombre del equipo, grupo, y nombre del archivo de la bandera
+- Game (admin): id del localTeam, id del visitTeam, ademas de los resultados
+- betGame (user): id del usuario, id del game, id del visitTeam, id del localTeam, y los marcadores propuestos, puntos ganados etc
+
+Notese como el *grupo* solo está relacionado en el modelo Team, por lo tanto se debe hacer un encadenamiento entre las consultas de los modelos, para llenar un unico array betGameByGroup que solo tenga las apuesta del grupo requerido
+
+### El problema
+El problema de la impelmentacion basicamente es que las consultas las base de datos son asyncrónicas, no hay lio con elo, la cosa es que cuando se quiere llenar el array betGameByGroup con las apuestas solamente correspondiente al grupo solicitado, lastimosamente NO LLENA NADA. Es decir hasta la fecha tengo un serio problema de implementacion de un algoritmo compatible con el concepto de sincronia, por lo tanto debo estudiarlo mas para SIMPLIFICAR LA IMPLEMENTACION REALIZADA
+
+### Solucion parcial (El adefecio)
+A la fecha si se pudo construir el array con las apuestas del jugador correspondiente al grupo solicitado, pero su implementacion es un adefeciooooo por los siguientes motivos
+    - Implemnetacion compleja de mantener
+    - En consola aparecen warning que no quiero tener
+    - Incluso se hace uso de consultas a la clase User, y dentro de esa consulta se coloca la implementacion, garantizando así que tal implemenatcion solo se da luego de que se hace la consulta a User y por lo tanto todos los datos necesarios ya estan guardados en variables para su posterior uso
+Repito que la implementacion es funcional pero hay que mejorarlos si o si
+
+### La solucion definitiva
+-   Comprender muy bien e implementar el concepto de async await

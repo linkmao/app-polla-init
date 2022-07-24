@@ -11,8 +11,8 @@ const getTeamById=async (req, res)=>{
 
 const addTeam = async (req, res)=>{
     console.log(req.body)
-    const {name, group, tag}=req.body
-    const newTeam=new Team({name, group, tag})
+    const {name, group, tag, flag}=req.body
+    const newTeam=new Team({name, group, tag, flag})
     await newTeam.save()
     res.status(201).json({"message":"Equipo guardado"})}
 

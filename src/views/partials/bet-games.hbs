@@ -1,9 +1,12 @@
-{{#each gameByGroup}}
+{{#each betGameByGroup}}
 <div class="card" style="width: 18rem;">
   <img src="..." class="card-img-top" alt="...">
   <div class="card-body">
-    <h5 class="card-title">{{localTeam}}</h5>
+    <h5 class="card-title">APUESTAS POR GRUPO</h5>
     <p class="card-text">{{localTeam}}</p>
+    <img src="/img/flags/{{localFlag}}" alt="flag" width="15%">
+    <p class="card-text">{{visitTeam}}</p>
+    <img src="/img/flags/{{visitFlag}}" alt="flag" width="15%">
     <a href="#" class="btn btn-primary">Go somewhere</a>
   </div>
 </div>
