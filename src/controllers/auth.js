@@ -1,9 +1,11 @@
 const passport = require('passport')
 const User = require ('../models/User')
 const Game = require('../models/Game')
-const betGame=require('../models/Bet-game')
+const Group = require('../models/Group')
+const BetClassification = require('../models/Bet-classification')
+const BetGame=require('../models/Bet-game')
 const config=require('../config/config')
-const BetGame = require('../models/Bet-game')
+
 
 
 const signUp = async (req,res)=>{
@@ -13,13 +15,20 @@ const signUp = async (req,res)=>{
 
 // La siguiente seccion de codigo lo que hace es generar la estructura de la apuesta inicial para el jugador recien logueado, se espera el futuras versiones hacer esta implementacion en un midleware independinete
   
+  // CREACION DE LOS DATOS PARA Bet-game
   const games = await Game.find({phase:config.phaseInitial})
-  console.log (games)
   games.forEach( async (e,i)=>{
   const newBetGame=new BetGame({idGame:e._id,idUser:newUser._id, localTeam:e.localTeam, visitTeam:e.visitTeam, localScore:e.localScore, visitScore:e.visitScore, analogScore:e.analogScore})
   await newBetGame.save()
   })
   
+  // CREACION DE LOS DATOS PARA Bet-classification
+  const groups = await Group.find()
+  groups.forEach(async(e,i)=>{
+  const newBetClassification = new BetClassification({idUser:newUser._id, group:e.name})
+  await newBetClassification.save()
+  })
+
   req.flash('mensajeOk','Registro exitoso. Inicia sesión')
   res.status(200).redirect('/')    // Luego de registrado se redirige a la pnatalla principal para que haga loguin, sin empbargoo luego lo haré oara que inmediatamente ingrese a su app
   

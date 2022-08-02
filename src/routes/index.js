@@ -3,6 +3,7 @@ const router = Router()
 const User = require('../models/User')
 const Game = require('../models/Game')
 const BetGame = require('../models/Bet-game')
+const BetClassification=require('../models/Bet-classification')
 const Team = require('../models/Team')
 const validar = require('../midleware/validaciones')
 
@@ -23,12 +24,18 @@ router.get('/games', validar.isAuth, async (req, res) => {
 
 
 //INICIO DEL ADEFECIO, FAVOR IR A README.MD PARA DETALLE
-router.get('/groups/:g', validar.isAuth, async (req, res) => {
+router.get('/groups/:g', validar.isAuth,  async (req, res) => {
+
+
   const betGameByGroup = []
   const equiposGrupo=[]
   const apuestas = await BetGame.find({ idUser: req.user.id }).lean()
+  const betClassification = await BetClassification.find({idUser:req.user.id, group:req.params.g}).lean()
+
+  
+
   const equipos = await Team.find().lean()
-  await User.find(x => {
+  User.find(x => {
   
     // Creo array con solo los equipos del grupo solicitado
     equipos.forEach(e=>{
@@ -45,6 +52,9 @@ router.get('/groups/:g', validar.isAuth, async (req, res) => {
         if (a.localTeam==e._id) {
           a.localTeam=e.name
           a.localFlag=e.flag
+          a.localGroup= req.params.g
+          if (a.localScore==-1) {a.localScore=""} // Esto es para evitar que aparezca el -1 en la renderizacion
+          if (a.analogScore=="-1") {a.analogScore=""}
           ubicacion.push(i)
         }
       })
@@ -52,6 +62,9 @@ router.get('/groups/:g', validar.isAuth, async (req, res) => {
         if (a.visitTeam==e._id){
           a.visitTeam=e.name
           a.visitFlag=e.flag
+          a.visitGroup= req.params.g
+          if (a.visitScore==-1) {a.visitScore=""} // Esto es para evitar que aparezca el -1 en la renderizacion
+          if (a.analogScore=="-1") {a.analogScore=""}
           ubicacion.push(i)
         }
       })
@@ -67,7 +80,8 @@ router.get('/groups/:g', validar.isAuth, async (req, res) => {
       betGameByGroup.push(apuestas[e])
     })
     // Renderizo
-    res.render('games', { betGameByGroup })
+    
+    res.render('games', { betGameByGroup, betClassification })
   })
 })
 

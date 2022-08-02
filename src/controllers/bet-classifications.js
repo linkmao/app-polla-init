@@ -15,14 +15,14 @@ const getClassificationById=async (req, res)=>{
 }  
 
 const addMeClassification = async (req, res)=>{
-    const {group, firstTeam, secondTeam, thirdTeam}=req.body
-    const newMeClassification=new BetClassification({idUser:req.user.id,group, firstTeam, secondTeam, thirdTeam})
+    const {group, firstTeam, secondTeam, thirdTeam, fourthTeam}=req.body
+    const newMeClassification=new BetClassification({idUser:req.user.id,group, firstTeam, secondTeam, thirdTeam, fourthTeam})
     await newMeClassification.save()
     res.status(201).json(newMeClassification)}
 
 const addClassification = async (req,res)=>{
-  const {group, firstTeam, secondTeam, thirdTeam}=req.body
-  const newClassification=new BetClassification({idUser:req.params.iduser,group, firstTeam, secondTeam, thirdTeam})
+  const {group, firstTeam, secondTeam, thirdTeam, fourthTeam}=req.body
+  const newClassification=new BetClassification({idUser:req.params.iduser,group, firstTeam, secondTeam, thirdTeam, fourthTeam})
   await newClassification.save()
   res.status(201).json(newClassification)
 }
@@ -30,7 +30,8 @@ const addClassification = async (req,res)=>{
 const updateMeClassification  = async (req, res)=>{
   const meClassificationUpdated = await BetClassification.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true}) 
   // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
-  res.status(200).json(meClassificationUpdated)
+  // res.status(200).json(meClassificationUpdated)
+  res.redirect('/groups/A')
   }
 
 const updateClassification= async(req,res)=>{

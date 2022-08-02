@@ -74,3 +74,14 @@ Repito que la implementacion es funcional pero hay que mejorarlos si o si
 
 ### La solucion definitiva
 -   Comprender muy bien e implementar el concepto de async await
+
+
+## Modelo Group
+Para la creacion de los modelos de apuesta asociado a las clasificaciones (betClassification) se encontró la necesidad de crear el modelo grupo, el cual tiene el grupo y los id de los equipos que pertenecen a ese grupo
+
+## PAra admin
+Cuando el proyecto esté bien maduro e debe crear interfaz para la configuracion inicial del torneo entre ellos
+- Insersion datos al modelo Team
+- Insersion datos al modelo Group
+- Insersion datos al modelo Game
+- Insersion datos al modelo BetGame (el cual se da durante el desarrollo de los juegos)
