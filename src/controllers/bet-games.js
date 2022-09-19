@@ -18,6 +18,12 @@ const getBetGameById=async (req, res)=>{
 }  
 
 
+const getBetGameByIdUser = async(req,res)=>{
+  const betGamesByIdUser = await BetGame.find({idUser:req.params.iduser})
+  res.status(200).json(betGamesByIdUser)
+}
+
+
 const addMeBetGame = async (req, res)=>{
    console.log(req.body.phase)
     if (req.body.phase==config.phaseInitial || req.body.phase==config.phaseEighth)
@@ -49,9 +55,10 @@ const addBetGame = async (req,res)=>{
 }
 
 const updateMeBetGame  = async (req, res)=>{
-  const gameMeBetUpdate = await BetGame.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true}) 
+  const gameMeBetUpdate = await BetGame.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true})
+  res.redirect('/eighth') 
   // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
-  res.status(200).json(gameMeBetUpdate)
+  // res.status(200).json(gameMeBetUpdate)
   
   }
 
@@ -95,4 +102,4 @@ const deleteAllBetGames= async(req, res)=>{
   res.status(200).send('Todos las apuestas de todos los jugadores fueron borradas')
 }
 
-module.exports = {getAllBets, getMeBets, getBetGameById, addMeBetGame,addBetGame , updateMeBetGame,updateMeBetGameGroup,updateBetGame, deleteMeBetGame, deleteAllMeBetGames, deleteBetGame, deleteAllBetGameByIdUser, deleteAllBetGames }
+module.exports = {getAllBets, getMeBets, getBetGameById,getBetGameByIdUser, addMeBetGame,addBetGame , updateMeBetGame,updateMeBetGameGroup,updateBetGame, deleteMeBetGame, deleteAllMeBetGames, deleteBetGame, deleteAllBetGameByIdUser, deleteAllBetGames }

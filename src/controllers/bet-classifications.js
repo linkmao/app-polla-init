@@ -14,6 +14,11 @@ const getClassificationById=async (req, res)=>{
   res.status(200).json(betClassification) 
 }  
 
+const getClassificationByUserId=async (req, res)=>{
+  const betClassificationByUser = await BetClassification.find({idUser:req.params.id})
+  res.status(200).json(betClassificationByUser) 
+}  
+
 const addMeClassification = async (req, res)=>{
     const {group, firstTeam, secondTeam, thirdTeam, fourthTeam}=req.body
     const newMeClassification=new BetClassification({idUser:req.user.id,group, firstTeam, secondTeam, thirdTeam, fourthTeam})
@@ -30,9 +35,16 @@ const addClassification = async (req,res)=>{
 const updateMeClassification  = async (req, res)=>{
   const meClassificationUpdated = await BetClassification.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true}) 
   // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
-  // res.status(200).json(meClassificationUpdated)
-  res.redirect('/groups/A')
+  res.status(200).json(meClassificationUpdated)
+  
   }
+
+// Este controlador es para que la vista del frontend lleve nuevamente al ver los datos del grupo actuaizado
+const updateMeBetClassificationGroup=async (req,res)=>{
+  const meClassificationUpdated = await BetClassification.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true})
+  const group = req.params.g 
+  res.redirect(`/groups/${group}`)
+}
 
 const updateClassification= async(req,res)=>{
   const classificationUpdated = await BetClassification.findOneAndUpdate( {_id:req.params.id, }, req.body,{new:true}) 
@@ -67,4 +79,4 @@ const deleteAllClassifications= async(req, res)=>{
   res.status(200).send('Todos las las classificaciones de todos los jugadores fueron borradas')
 }
 
-module.exports = {getAllClassifications, getMeClassification, getClassificationById, addMeClassification,addClassification , updateMeClassification,updateClassification, deleteMeClassification, deleteAllMeClassifications, deleteClassification, deleteAllClassifitationsByIdUser, deleteAllClassifications }
+module.exports = {getAllClassifications, getMeClassification, getClassificationById, addMeClassification,addClassification , updateMeClassification,updateClassification, deleteMeClassification, deleteAllMeClassifications, deleteClassification, deleteAllClassifitationsByIdUser, deleteAllClassifications, getClassificationByUserId,updateMeBetClassificationGroup }

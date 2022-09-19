@@ -42,9 +42,9 @@ const updateGame  = async (req, res)=>{
     res.status(200).json(gameUpdate)
     await calculatePointByGame(req.params.id)
     } else {
-     const gameUpdate = await Game.findByIdAndUpdate(req.params.id, req.body,{new:true}) 
-     res.status(200).json(gameUpdate)
-  }
+    const gameUpdate = await Game.findByIdAndUpdate(req.params.id, req.body,{new:true}) 
+    res.status(200).json(gameUpdate)
+    }
  }
 
 const deleteGame = async (req, res)=>{

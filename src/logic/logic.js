@@ -30,6 +30,15 @@ console.log('puntos del juego '+e.idGame+' en la apuesta '+ e._id+ ' es: ' +part
 }
 
 
+// const createGamesPhaseTwo = async (idGame)=>{
+// games= await game.find({_id:idGame})
+// const localTeam = games.localTeam
+// const visitTeam = games.visitTeam
+// betGames = await betGame.find({idGame})
+// betGames.forEach(async e=>{
+// await betGame.findByIdAndUpdate(e._id, {localTeam,visitTeam})
+// })}
+
 
 
 // Funcion que se encarga del calculo de los puntajes por claseficacion, se hace a partir de la comparacion del dcumento guardado o actualizado en classification con cdda uno de los documentos guardados en bet-classification, el parametro clave es el grupo

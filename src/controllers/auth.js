@@ -1,7 +1,7 @@
 const passport = require('passport')
 const User = require ('../models/User')
 const Game = require('../models/Game')
-const Group = require('../models/Group')
+const Classification= require('../models/Classification')
 const BetClassification = require('../models/Bet-classification')
 const BetGame=require('../models/Bet-game')
 const config=require('../config/config')
@@ -16,19 +16,24 @@ const signUp = async (req,res)=>{
 // La siguiente seccion de codigo lo que hace es generar la estructura de la apuesta inicial para el jugador recien logueado, se espera el futuras versiones hacer esta implementacion en un midleware independinete
   
   // CREACION DE LOS DATOS PARA Bet-game
-  const games = await Game.find({phase:config.phaseInitial})
+  //Nota del 29 de agsoto de 2022. Inicialmente la estructura de apuesta que se le cargaba al jugador era solo el correspondiente a  la fase inicial, para ello se usaba en la consulta del modelo Game la siguiente sintaxis Game.find({phase:config.phaseInitial}), sin embargo analizando postetiormente y para no tener que crear otra estructura cuando las apuestas sean de las demás fases, se opta por que se cargue al jugador previamente registrado. TODA LA ESTRUCTURA DE LOS JUEGos, es decir todos los 64 partidos, la forma de diferenciar cada etapa está en la propiedad phase del modelo Game
+  const games = await Game.find()
   games.forEach( async (e,i)=>{
-  const newBetGame=new BetGame({idGame:e._id,idUser:newUser._id, localTeam:e.localTeam, visitTeam:e.visitTeam, localScore:e.localScore, visitScore:e.visitScore, analogScore:e.analogScore})
+  const newBetGame=new BetGame({idGame:e._id,idUser:newUser._id,localScore:-1, visitScore:-1, analogScore:"-1"})
   await newBetGame.save()
   })
   
   // CREACION DE LOS DATOS PARA Bet-classification
-  const groups = await Group.find()
-  groups.forEach(async(e,i)=>{
-  const newBetClassification = new BetClassification({idUser:newUser._id, group:e.name})
-  await newBetClassification.save()
-  })
 
+   const classification = await Classification.find()
+   classification.forEach(async e=>{
+   const newBetClassification = new BetClassification({idUser:newUser._id, group:e.group, idClassification:e._id})
+   await newBetClassification.save()
+   })
+
+
+
+  
   req.flash('mensajeOk','Registro exitoso. Inicia sesión')
   res.status(200).redirect('/')    // Luego de registrado se redirige a la pnatalla principal para que haga loguin, sin empbargoo luego lo haré oara que inmediatamente ingrese a su app
   

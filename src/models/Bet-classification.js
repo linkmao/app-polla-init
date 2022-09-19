@@ -2,6 +2,7 @@ const {Schema, model}= require('mongoose')
 
 const betClassificationSchema = new Schema({
 idUser:{type:String, required:true},
+idClassification:{type:String, required:true, default:" "},
 group:{type:String, required:true},
 firstTeam:{type:String,required:true, default:" "},
 secondTeam:{type:String,required:true,default:" "},

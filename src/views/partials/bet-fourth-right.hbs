@@ -1,0 +1,33 @@
+{{#each betGames}}
+
+<div class="card" style="width: 200 px;">
+    <img src="..." class="card-img-top" alt="...">
+    <div class="card-body">
+      <h6 class="card-title">APUESTAS POR GRUPO</h6>
+      <div class="row">
+        <div class="col"><img src="/img/flags/{{localFlag}}" alt="flag" width="50%"></div>
+        <div class="col">
+          <p class="card-text">{{betLocalTeam}}</p>
+        </div>
+        <div class="col"><img src="/img/flags/{{visitFlag}}" alt="flag" width="50%"></div>
+        <div class="col">
+          <p class="card-text">{{betVisitTeam}}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <h2 class="card-text">{{localScore}}</h2>
+        </div>
+        <div class="col">
+          <p>Apuesta analoga: </p>
+          <h2>{{analogScore}}</h2>
+        </div>
+        <div class="col">
+          <h2 class="card-text">{{visitScore}}</h2>
+        </div>
+      </div>
+      <p>Puntos ganados: {{earnedScore}}</p>
+    </div>
+  </div>
+
+{{/each}}

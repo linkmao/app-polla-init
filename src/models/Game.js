@@ -2,7 +2,7 @@ const {Schema, model}= require('mongoose')
 
 const GameSchema= new Schema({
     gameNumber:{type:Number,required:true},
-    group:{type:String},
+    group:{type:String, required:true, default:"GENERIC GROUP"},
     phase:{type:Number, required:true},
     localTeam: {type:String, required:true, default:"GENERIC LOCAL TEAM"},
     visitTeam:{type:String, required:true, default:"GENERIC VISIT TEAM"},
