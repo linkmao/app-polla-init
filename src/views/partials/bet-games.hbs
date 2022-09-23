@@ -1,5 +1,4 @@
-{{#each betByGroup}}
-
+{{#each dataBet}}
 <section class="bet-games">
   <div class="card" style="width: 200 px;">
     <img src="..." class="card-img-top" alt="...">
@@ -32,7 +31,7 @@
 
     <div class="card-footer">
       <div class="container">
-        <form action="../api/bet-games/me/bet/group/{{_id}}/{{group}}/?_method=PUT" method="POST">
+        <form action="../api/bet-games/me/bet/group/{{idBet}}/{{group}}/?_method=PUT" method="POST">
           <input type="hidden" name="_method" value="PUT">
           <div class="row">
             <div class="mb-3">
@@ -72,12 +71,13 @@
 
 
 
-{{#each betClassificationByGroup}}
+
+{{#each dataClassification}}
 <section class="bet-classification">
   <br>
   <br>
   <br>
-  <form action="../api/bet-classifications/me/bet/group/{{_id}}/{{group}}/?_method=PUT" method="POST">
+  <form action="../api/bet-classifications/me/bet/group/{{group}}/?_method=PUT" method="POST">
     <input type="hidden" name="_method" value="PUT">
 
     <div class="card" style="width: 18rem;">
@@ -85,8 +85,6 @@
       <div class="card-body">
         <h5 class="card-title">Clasificaciones del grupo {{group}}</h5>
         <h4 class="card-title">Apuesta actual del grupo {{group}}</h4>
-
-
         <div class="row">
           <div class="col">
             <p>Orden</p>
@@ -95,16 +93,15 @@
             <p>Equipo</p>
           </div>
         </div>
-
-         <div class="row">
+        <div class="row">
           <div class="col">
             <p>1</p>
           </div>
-           <div class="col">
+          <div class="col">
             <img src="/img/flags/{{flagFirstTeam}}" alt="flag" width="40%">
           </div>
           <div class="col">
-            <p>{{firstTeam}}</p>
+            <p>{{betFirstTeam}}</p>
           </div>
         </div>
 
@@ -112,11 +109,11 @@
           <div class="col">
             <p>2</p>
           </div>
-           <div class="col">
+          <div class="col">
             <img src="/img/flags/{{flagSecondTeam}}" alt="flag" width="40%">
           </div>
           <div class="col">
-            <p>{{secondTeam}}</p>
+            <p>{{betSecondTeam}}</p>
           </div>
         </div>
 
@@ -124,11 +121,11 @@
           <div class="col">
             <p>3</p>
           </div>
-           <div class="col">
-             <img src="/img/flags/{{flagThirdTeam}}" alt="flag" width="40%">
+          <div class="col">
+            <img src="/img/flags/{{flagThirdTeam}}" alt="flag" width="40%">
           </div>
           <div class="col">
-            <p>{{thirdTeam}}</p>
+            <p>{{betThirdTeam}}</p>
           </div>
         </div>
 
@@ -136,11 +133,11 @@
           <div class="col">
             <p>4</p>
           </div>
-           <div class="col">
-             <img src="/img/flags/{{flagFourthTeam}}" alt="flag" width="40%">
+          <div class="col">
+            <img src="/img/flags/{{flagFourthTeam}}" alt="flag" width="40%">
           </div>
           <div class="col">
-            <p>{{fourthTeam}}</p>
+            <p>{{betFourthTeam}}</p>
           </div>
         </div>
 
@@ -176,7 +173,7 @@
           </div>
           <div class="col">
             <select class="form-select" aria-label="Default select example" id="select" name="secondTeam" required>
-             <option value="{{teamOneId}}">{{teamOne}}</option>
+              <option value="{{teamOneId}}">{{teamOne}}</option>
               <option value="{{teamTwoId}}">{{teamTwo}}</option>
               <option value="{{teamThreeId}}">{{teamThree}}</option>
               <option value="{{teamFourId}}">{{teamFour}}</option>
@@ -190,7 +187,7 @@
           </div>
           <div class="col">
             <select class="form-select" aria-label="Default select example" id="select" name="thirdTeam" required>
-             <option value="{{teamOneId}}">{{teamOne}}</option>
+              <option value="{{teamOneId}}">{{teamOne}}</option>
               <option value="{{teamTwoId}}">{{teamTwo}}</option>
               <option value="{{teamThreeId}}">{{teamThree}}</option>
               <option value="{{teamFourId}}">{{teamFour}}</option>
@@ -204,7 +201,7 @@
           </div>
           <div class="col">
             <select class="form-select" aria-label="Default select example" id="select" name="fourthTeam" required>
-             <option value="{{teamOneId}}">{{teamOne}}</option>
+              <option value="{{teamOneId}}">{{teamOne}}</option>
               <option value="{{teamTwoId}}">{{teamTwo}}</option>
               <option value="{{teamThreeId}}">{{teamThree}}</option>
               <option value="{{teamFourId}}">{{teamFour}}</option>
@@ -215,8 +212,6 @@
         <div class="row">
           <p>Puntos ganados: </p>
           <h2>{{earnedScore}}</h2>
-
-
           <div class="row">
             <button type="submit" class="btn btn-primary mb-3">Clasificacion</button>
           </div>

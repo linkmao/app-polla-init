@@ -35,16 +35,26 @@ const addClassification = async (req,res)=>{
 const updateMeClassification  = async (req, res)=>{
   const meClassificationUpdated = await BetClassification.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true}) 
   // esa pequea configuraicion es para que mongo devuelva el objeto actualizado
-  res.status(200).json(meClassificationUpdated)
-  
-  }
+  res.status(200).json(meClassificationUpdated)}
 
 // Este controlador es para que la vista del frontend lleve nuevamente al ver los datos del grupo actuaizado
 const updateMeBetClassificationGroup=async (req,res)=>{
-  const meClassificationUpdated = await BetClassification.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true})
+  await BetClassification.findOneAndUpdate( {idUser:req.user.id, group:req.params.g }, req.body,{new:true})
   const group = req.params.g 
+  // console.log(req.params.id)
+  console.log(req.params.g)
   res.redirect(`/groups/${group}`)
+  
 }
+
+
+// const updateMeBetGameGroup  = async (req, res)=>{
+//   const gameMeBetUpdate = await BetGame.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id }, req.body,{new:true}) 
+//   const group = req.params.g
+//   res.redirect(`/groups/${group}`)
+//   }
+
+
 
 const updateClassification= async(req,res)=>{
   const classificationUpdated = await BetClassification.findOneAndUpdate( {_id:req.params.id, }, req.body,{new:true}) 

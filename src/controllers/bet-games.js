@@ -63,7 +63,7 @@ const updateMeBetGame  = async (req, res)=>{
   }
 
   const updateMeBetGameGroup  = async (req, res)=>{
-    const gameMeBetUpdate = await BetGame.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id, }, req.body,{new:true}) 
+    const gameMeBetUpdate = await BetGame.findOneAndUpdate( {idUser:req.user.id, _id:req.params.id }, req.body,{new:true}) 
     const group = req.params.g
     res.redirect(`/groups/${group}`)
     }
