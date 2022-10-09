@@ -74,6 +74,8 @@ if (e.secondTeam==classifications[0].secondTeam){
 })
 }
 
+
+
 const calculatePointByFinalists = async() =>{
  const finalists= await finalist.find()
  const betFinalists = await betFinalist.find()

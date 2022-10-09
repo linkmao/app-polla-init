@@ -78,6 +78,10 @@ Repito que la implementacion es funcional pero hay que mejorarlos si o si
 
 ## Modelo Group
 Para la creacion de los modelos de apuesta asociado a las clasificaciones (betClassification) se encontró la necesidad de crear el modelo grupo, el cual tiene el grupo y los id de los equipos que pertenecen a ese grupo
+Actualizacion 07 octubre: el modelo Group no se usará
+
+## Modelo Bet-finalist
+En una futura pero no muy lejana version, se sugiere eliminar el modelo Bet-finalist y hacer esa implementacion con bet-classification, usado la propiedad group con el valor FINAL para saber que se trata de la aspuesta de ls 4 equipos finales, esto requiere revisar todo el tema de controladores y rutas asociadas, pero se logra una buena refactorización
 
 ## PAra admin
 Cuando el proyecto esté bien maduro e debe crear interfaz para la configuracion inicial del torneo entre ellos

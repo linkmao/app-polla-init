@@ -31,8 +31,6 @@ const signUp = async (req,res)=>{
    await newBetClassification.save()
    })
 
-
-
   
   req.flash('mensajeOk','Registro exitoso. Inicia sesión')
   res.status(200).redirect('/')    // Luego de registrado se redirige a la pnatalla principal para que haga loguin, sin empbargoo luego lo haré oara que inmediatamente ingrese a su app

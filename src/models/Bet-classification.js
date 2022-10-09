@@ -3,7 +3,7 @@ const {Schema, model}= require('mongoose')
 const betClassificationSchema = new Schema({
 idUser:{type:String, required:true},
 // idClassification:{type:String, required:true, default:" "},
-group:{type:String, required:true},
+group:{type:String, required:true}, //Para la fase de grupos, group será A, B, C etc, para los cuatro finalistas, group será FINAL
 firstTeam:{type:String,required:true, default:"NO-BET"},
 secondTeam:{type:String,required:true,default:"NO-BET"},
 thirdTeam:{type:String,required:true,default:"NO-BET"},

@@ -17,9 +17,12 @@ phaseSemiFinals:4,
 phaseThirdFourth:5,
 phaseFinal:6,
 // La siguinte configuracion está asociado a la información necesaria para crear las apuestas de las etapas de cuartos de final, semifinal , y finales
-// Estos arrays contienen el numero del juego necesario para conformar la respectiva etapa, se colocan en el orden necesario por ejemplo los juegos, 49 y 50 son los que me crean el juego 57. los juegos 53 y 54 crearan el juego 58, y así sucesivamente
-numberGameFourth:[49,50,53,54,51,52,55,56],
-numberGameSemiFinals:[57,58,59,60],
-numberFinals:[61,62]
+// La estructura para la conformación de los partidos de ocatavo de final en adelante se realiza con eesta configuración, cada array se compone de [juego1, juego2, juego3] donde juego3 se conforma con los ganadores de juego1 y juego2 respectivamente
+gamesEighth:[[49,50,57],[53,54,58],[51,52,59],[55,56,60]],
+gamesFourth:[[57,58,61],[59,60,62]],
+gamesSemi:[[61,62,64]],
+// finalStruct contiene los juegos para alrmar la estructura de los dos juegos finales (tercero y cuarto y finales), si bien gamesSemi tiene la estructura para armar el juego final, debido a que se requiere otra logica para el juego de tercero y cuarto se implementa de estamanera, el orden de los datos correspondiente al numero de juego de los partidos necesrios es el siguiente
+//[Juego-semifinal-1, juego-semifinal-2, juego-tercero-y-cuarto, juego-final]
+finalStruct:[61,62,63,64]
 }
 
