@@ -43,7 +43,7 @@ const getBetClassificationByGroup = async (group, idUser)=>{
   teams=await Team.find().lean()
   betClassification=await BetClassification.find({idUser, group}).lean()
   games=await Game.find().lean()
-  betGames= await BetGame.find().lean()
+  betGames= await BetGame.find({idUser}).lean()
   }
 
   let betFirstTeam=null, flagFirstTeam=null, betSecondTeam=null, flagSecondTeam=null, betThirdTeam=null,flagThirdTeam=null, betFourthTeam=null,flagFourthTeam=null 
