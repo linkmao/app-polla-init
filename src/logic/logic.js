@@ -1,10 +1,8 @@
 // Codigo con la lógica del juego
 const betGame = require('../models/Bet-game')
 const betClassification = require('../models/Bet-classification')
-const betFinalist = require('../models/Bet-finalist')
 const game= require('../models/Game')
 const classification= require('../models/Classification')
-const finalist = require('../models/Finalist')
 const config = require('../config/config')
 
 

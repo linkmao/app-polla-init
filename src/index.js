@@ -7,12 +7,10 @@ const teams = require('./routes/teams')
 const games = require('./routes/games')
 //const groups = require('./routes/groups')
 const classifications = require('./routes/classifications')
-const finalists = require('./routes/finalists')
 const users = require('./routes/users')
 const auth = require('./routes/auth')
 const betGame = require('./routes/bet-games')
 const betClassification = require('./routes/bet-classifications')
-const betFinalists = require('./routes/bet-finalists')
 const index = require('./routes/index')
 const flash = require('connect-flash') // Para el envio de mensajes del backend al frontend
 const passport = require('passport') // Passport y sus dependencias auxiliares
@@ -99,11 +97,10 @@ app.use('/api/teams', teams)
 // app.use('/api/groups', groups )
 app.use('/api/games', games)
 app.use('/api/classifications', classifications)
-app.use('/api/finalists', finalists)
 app.use('/api/users', users)
 app.use('/api/bet-games', betGame)
 app.use('/api/bet-classifications', betClassification)
-app.use('/api/bet-finalists', betFinalists)
+
 
 //Iniciode del servidor
 app.listen(app.get('port'), () => { console.log('app escuchando en el puerto ' + app.get('port')) })
