@@ -8,7 +8,7 @@ firstTeam:{type:String,required:true, default:"NO-BET"},
 secondTeam:{type:String,required:true,default:"NO-BET"},
 thirdTeam:{type:String,required:true,default:"NO-BET"},
 fourthTeam:{type:String,required:true,default:"NO-BET"},
-earnedScore:{type:Number, default:0},
+earnedScore:{type:Array, default:[0,0,0,0]},
 created_at:{type:Date, default:Date.now}
 },
 {versionKey:false})

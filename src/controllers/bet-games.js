@@ -65,24 +65,18 @@ const updateMeBetGameAndNextGame = async (req, res) => {
   await BetGame.findOneAndUpdate({ idUser: req.user.id, _id: req.params.id, },{localScore:req.body.localScore, 
     analogScore:req.body.analogScore, visitScore:req.body.visitScore}, { new: true })
   
-if (req.params.phase!=config.phaseFinal){
   // Guarda el equipo apostato para la siguinete ronda (juego de ganadors)
     await BetGame.findOneAndUpdate({ idUser: req.user.id, idGame: req.params.game }, { betLocalTeam: req.body.betLocalTeam, betVisitTeam: req.body.betVisitTeam })
   // Ademas del juego de ganadores creado (los elegidos por el usuario), si la pase es de semifinal se debe crear tambien el juego de perderores, para confromar así el juego de terceros y cuartos
-  if(req.params.phase==config.phaseSemiFinals){
-   await createGameThirdhAndFourth(req.user.id,config.finalStruct)
-   res.redirect('/semi')
-  }
+  
   if (req.params.phase==config.phaseEighth) res.redirect('/eighth')
   if (req.params.phase==config.phaseFourth) res.redirect('/fourth')
-} 
-
-else {
-   res.redirect('/finals')
+  if(req.params.phase==config.phaseSemiFinals){
+    await createGameThirdhAndFourth(req.user.id,config.finalStruct)
+    res.redirect('/semi')
+   }
+  if (req.params.phase==config.phaseFinal) res.redirect('/finals')
 }
-}
-
-
 
 const updateMeBetGameGroup = async (req, res) => {
   console.log("Actualizando grupo")

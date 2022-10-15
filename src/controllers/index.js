@@ -5,6 +5,7 @@ const Team = require('../models/Team')
 const config = require('../config/config')
 
 
+// Controlador para juegos por grupos (phase 1)
 const getGameAndBet = async (phase,group,idUser)=>{
   const games= await Game.find({phase, group}).lean()
   const teams=await Team.find().lean()
@@ -24,12 +25,19 @@ const getGameAndBet = async (phase,group,idUser)=>{
     {localScore==-1 ? localScore="": localScore}
     {visitScore==-1? visitScore="": visitScore}
     {analogScore=="-1"? analogScore="":analogScore}
-    data.push({idBet,gameNumber,  group, localTeam, visitTeam, localFlag,visitFlag,localScore,visitScore,analogScore, earnedScore})
+    // Pequeña funcion encargargada de sumar todos los puntajes parciaales ganado por juego
+    let totalScore=0
+    earnedScore.forEach(e=>{totalScore+=e})
+    //AL parcer Handlebars no trabaja con elementos de array es por eso que los resultados de los puntos ganados se llevan separaditos así
+    const pointByScore = earnedScore[config.xPointByScore]
+    const pointByAnalogScore=earnedScore[config.xPointByAnalogScore]
+    data.push({idBet,gameNumber,  group, localTeam, visitTeam, localFlag,visitFlag,localScore,visitScore,analogScore, totalScore, pointByScore,pointByAnalogScore})
    })
-   console.log(data) 
+   
 return data  
 }
 
+//Controlador para clasificaciones de la etapas de grupos (phase 1) y tambien de los 4 finalistas (phase FINAL)
 const getBetClassificationByGroup = async (group, idUser)=>{
   let teams=null, betClassification=null, games=null
   if(group!="FINAL"){
@@ -47,8 +55,6 @@ const getBetClassificationByGroup = async (group, idUser)=>{
   }
 
   let betFirstTeam=null, flagFirstTeam=null, betSecondTeam=null, flagSecondTeam=null, betThirdTeam=null,flagThirdTeam=null, betFourthTeam=null,flagFourthTeam=null 
-
-
   const data=[]
 
   // NOTA MUY IMPORTANTE: Definitivamente a la fecha 22 de septienbre de 2022, tengo una dificultad con elacceso a los objetos que quedan guardados en los arrays despues de una consulta a base de datos, por ejemplo considere que se guarta en array teams la información que viene del modelo Team 
@@ -60,11 +66,9 @@ const getBetClassificationByGroup = async (group, idUser)=>{
      if (teamId!="NO-BET"){
       betFirstTeam=teams.find(t=>t._id==teamId).name
       flagFirstTeam=teams.find(t=>t._id==teamId).flag
-      console.log("Con apuesta: " , betFirstTeam)
-    } else {
+      } else {
       betFirstTeam="Sin asignar"
       flagFirstTeam="no-flag.png"
-      console.log("Sin apuesta: " , betFirstTeam)
     }
 
     teamId= e.secondTeam
@@ -131,13 +135,25 @@ teamThree=teams.find(t=>t._id==teamThreeId).name
 teamFour=teams.find(t=>t._id==teamFourId).name
 }
 
+//Obtencion de los puntajes ganado en la apuesta
+let totalScore=0
+const pointByFirst = e.earnedScore[config.xPointByFirst]
+const pointBySecond=e.earnedScore[config.xPointByFirst]
+const pointByThirdh=e.earnedScore[config.xPointByThirdh]
+const pointByFourth=e.earnedScore[config.xPointByFourth]
+e.earnedScore.forEach(s=>totalScore+=s)
+let renderFinal
+{group=="FINAL" ? renderFinal=true : renderFinal=false}
 
-data.push({group,idUser,betFirstTeam, flagFirstTeam, betSecondTeam,flagSecondTeam,betThirdTeam,flagThirdTeam,betFourthTeam,flagFourthTeam,teamOne,teamOneId,teamTwo,teamTwoId,teamThree,teamThreeId,teamFour,teamFourId})
+
+
+data.push({group,idUser,betFirstTeam, flagFirstTeam, betSecondTeam,flagSecondTeam,betThirdTeam,flagThirdTeam,betFourthTeam,flagFourthTeam,teamOne,teamOneId,teamTwo,teamTwoId,teamThree,teamThreeId,teamFour,teamFourId, pointByFirst,pointBySecond,pointByThirdh,pointByFourth,totalScore,renderFinal})
   }) // fin del método
  
 return data
 }
 
+// Controlador para los juegos por fases desde octavos hasta semifinal (phase 2, 3, 4)
 const getGameAndBetByPhase =async (phase, gamesPhase,idUser)=>{
   const games= await Game.find().lean()
   const teams=await Team.find().lean()
@@ -186,6 +202,8 @@ const getGameAndBetByPhase =async (phase, gamesPhase,idUser)=>{
     let analogScore2=betGames.find(b=>b.idGame==idGame2).analogScore
     const earnedScore2=betGames.find(b=>b.idGame==idGame2).earnedScore
 
+    console.log(earnedScore1)
+    console.log(earnedScore2)
     {localScore1==-1 ? localScore1="" : localScore1 }
     {visitScore1==-1 ? visitScore1="" : visitScore1}
     {analogScore1==-1 ? analogScore1="": analogScore1}
@@ -212,25 +230,47 @@ const getGameAndBetByPhase =async (phase, gamesPhase,idUser)=>{
       betVisitFlag=teams.find(t=>t._id==idBetVisitTeam).flag
     }
 
-    const render=true
-    data.push({phase,gameNumber1, localTeamId1, localTeam1, localFlag1, visitTeamId1, visitTeam1, visitFlag1,gameNumber2, localTeamId2, localTeam2,localFlag2, visitTeamId2, visitTeam2, visitFlag2, idBet1, localScore1, visitScore1, analogScore1, earnedScore1, idBet2, localScore2, visitScore2, analogScore2, earnedScore2, idNextGame, betLocalTeam, betVisitTeam, betLocalFlag, betVisitFlag, render})
+    //Tratamiento del puntaje discretizado
+    let totalScore1=0, totalScore2=0
+    earnedScore1.forEach(e=>{totalScore1+=e})
+    earnedScore2.forEach(e=>{totalScore2+=e})
+    //AL parcer Handlebars no trabaja con elementos de array es por eso que los resultados de los puntos ganados se llevan separaditos así
+    const pointByScore1 = earnedScore1[config.xPointByScore]
+    const pointByAnalogScore1=earnedScore1[config.xPointByAnalogScore]
+    const pointByLocalEqual1=earnedScore1[config.xPointByLocalEqual]
+    const pointByVisitEqual1=earnedScore1[config.xPointByVisitEqual]
+    const pointByScore2 = earnedScore2[config.xPointByScore]
+    const pointByAnalogScore2=earnedScore2[config.xPointByAnalogScore]
+    const pointByLocalEqual2=earnedScore2[config.xPointByLocalEqual]
+    const pointByVisitEqual2=earnedScore2[config.xPointByVisitEqual]
+    
+    let renderPoint = true
+    if (phase==config.phaseEighth) renderPoint=false
+    
+    
+    data.push({phase,gameNumber1, localTeamId1, localTeam1, localFlag1, visitTeamId1, visitTeam1, visitFlag1,gameNumber2, localTeamId2, localTeam2,localFlag2, visitTeamId2, visitTeam2, visitFlag2, idBet1, localScore1, visitScore1, analogScore1, totalScore1,pointByScore1,pointByAnalogScore1,pointByLocalEqual1,pointByVisitEqual1 , idBet2, localScore2, visitScore2, analogScore2, totalScore2,pointByScore2,pointByAnalogScore2, pointByLocalEqual2, pointByVisitEqual2, idNextGame, betLocalTeam, betVisitTeam, betLocalFlag, betVisitFlag, renderPoint})
 
   })
 return data
 }
 
+//Controlador para los juegos de 3 y 4 y final (pase 5 y 6)
 const getGameAndBetFinal =async (phase, gameStruct, idUser)=>{
 const games= await Game.find().lean()
 const teams= await Team.find().lean()
 const betGames=await BetGame.find({idUser}).lean()
 const data=[]
 
-
-const idGame1= await games.find(g=>g.gameNumber==gameStruct[2])._id  // Id juego de tecer y cuarto puesto
+const idGame1=  games.find(g=>g.gameNumber==gameStruct[2])._id  // Id juego de tecer y cuarto puesto
 const gameNumber1=gameStruct[2]
-const idGame2= await games.find(g=>g.gameNumber==gameStruct[3])._id // Id juego final
+const idGame2=  games.find(g=>g.gameNumber==gameStruct[3])._id // Id juego final
 const gameNumber2= gameStruct[3]
+
+
+
+
 let localTeamId1=null, visitTeamId1=null, localTeamId2=null, visitTeamId2=null
+
 
   localTeamId1=betGames.find(t=>t.idGame==idGame1).betLocalTeam
   visitTeamId1=betGames.find(t=>t.idGame==idGame1).betVisitTeam
@@ -250,13 +290,34 @@ let localTeamId1=null, visitTeamId1=null, localTeamId2=null, visitTeamId2=null
   let localScore1= betGames.find(b=>b.idGame==idGame1).localScore
   let visitScore1= betGames.find(b=>b.idGame==idGame1).visitScore
   let analogScore1= betGames.find(b=>b.idGame==idGame1).analogScore
-  const earnedScore1= betGames.find(b=>b.idGame==idGame1).earnedScore
+  const earnedScore1= betGames.find(b=>b.idGame==idGame1).earnedScore // Puntaje partido 3 y 4
   
   const idBet2= betGames.find(b=>b.idGame==idGame2)._id
   let localScore2=betGames.find(b=>b.idGame==idGame2).localScore
   let visitScore2=betGames.find(b=>b.idGame==idGame2).visitScore
   let analogScore2=betGames.find(b=>b.idGame==idGame2).analogScore
-  const earnedScore2=betGames.find(b=>b.idGame==idGame2).earnedScore
+  const earnedScore2=betGames.find(b=>b.idGame==idGame2).earnedScore // Puntaje obtenido partioo final
+
+  
+    //AL parcer Handlebars no trabaja con elementos de array es por eso que los resultados de los puntos ganados se llevan separaditos así
+  const pointByScore1 = earnedScore1[config.xPointByScore]
+  const pointByAnalogScore1=earnedScore1[config.xPointByAnalogScore]
+  const pointByLocalEqual1=earnedScore1[config.xPointByLocalEqual]
+  const pointByVisitEqual1=earnedScore1[config.xPointByVisitEqual]
+  const pointByScore2 = earnedScore2[config.xPointByScore]
+  const pointByAnalogScore2=earnedScore2[config.xPointByAnalogScore]
+  const pointByLocalEqual2=earnedScore2[config.xPointByLocalEqual]
+  const pointByVisitEqual2=earnedScore2[config.xPointByVisitEqual]
+// Datos de virtualGame donde estan guadados los puntos por la apuesta del equipo ganador en el partido de 3y4 y de final, el puntaje de 3y4 está guardado en earnedScore[xPointByLocalEqual] y partido de final está guardado en earnedSecore[xPointByVisitEqual]
+const idVirtualGame =  games.find(g=>g.gameNumber==gameStruct[4])._id
+const pointByWin1=  betGames.find(b=>b.idGame==idVirtualGame).earnedScore[config.xPointByLocalEqual]
+const pointByWin2=  betGames.find(b=>b.idGame==idVirtualGame).earnedScore[config.xPointByVisitEqual]
+console.log(pointByWin2)
+let totalScore1=0, totalScore2=0
+earnedScore1.forEach(e=>{totalScore1+=e}) 
+earnedScore2.forEach(e=>{totalScore2+=e})
+totalScore1+=pointByWin1
+totalScore2+=pointByWin2
 
   {localScore1==-1 ? localScore1="" : localScore1 }
   {visitScore1==-1 ? visitScore1="" : visitScore1}
@@ -265,17 +326,39 @@ let localTeamId1=null, visitTeamId1=null, localTeamId2=null, visitTeamId2=null
   {visitScore2==-1 ? visitScore2="" : visitScore2}
   {analogScore2==-1 ? analogScore2="": analogScore2}
 
-  const render=false
-  const idNextGame=0 // no importa el valor. se necesita teemrlo pata que la url funcione, pero realmente en el caso de los juegos final no hay next game
-   data.push({phase,idNextGame, gameNumber1, localTeamId1, localTeam1, localFlag1, visitTeamId1, visitTeam1, visitFlag1,gameNumber2, localTeamId2, localTeam2,localFlag2, visitTeamId2, visitTeam2, visitFlag2, idBet1, localScore1, visitScore1, analogScore1, earnedScore1, idBet2, localScore2, visitScore2, analogScore2, earnedScore2, render})
+  // Se obtiene los datos del juego virtual donde se guaradan los equipos realmenta ganadores de tercer y cuarto puesto y de final
+  
+  const nextGame=gameStruct[4]
+  const idNextGame = games.find(g=>g.gameNumber==nextGame)._id 
+  
 
-   
+  // Se obtiene los nombres y banderas de los equipos que clasifican a la sigiente rnda
+  const idBetLocalTeam= betGames.find(b=>b.idGame==idNextGame).betLocalTeam
+  const idBetVisitTeam= betGames.find(b=>b.idGame==idNextGame).betVisitTeam
+  let betLocalTeam=null, betVisitTeam=null, betLocalFlag=null, betVisitFlag=null
+  if (idBetLocalTeam=="NO-BET"){
+    betLocalTeam="Sin asignar"
+    betLocalFlag="no-flag.png"
+  }else{
+    betLocalTeam=teams.find(t=>t._id==idBetLocalTeam).name
+    betLocalFlag=teams.find(t=>t._id==idBetLocalTeam).flag
+  }
+  if (idBetVisitTeam=="NO-BET"){
+    betVisitTeam="Sin asignar"
+    betVisitFlag="no-flag.png"
+  }else{
+    betVisitTeam=teams.find(t=>t._id==idBetVisitTeam).name
+    betVisitFlag=teams.find(t=>t._id==idBetVisitTeam).flag
+  }
 
+  const renderPoint=true  // flag para mostrar el puntaje por local y visitante coincidente
+  const rederPointVirtualGame= true // flag para mostrar puntaje por ganador de 3y4 y final 
+
+   data.push({phase,idNextGame, gameNumber1, localTeamId1, localTeam1, localFlag1, visitTeamId1, visitTeam1, visitFlag1,gameNumber2, localTeamId2, localTeam2,localFlag2, visitTeamId2, visitTeam2, visitFlag2, idBet1, localScore1, visitScore1, analogScore1, earnedScore1, idBet2, localScore2, visitScore2, analogScore2, earnedScore2, betLocalTeam, betLocalFlag, betVisitTeam, betVisitFlag,pointByScore1, pointByAnalogScore1,pointByLocalEqual1,pointByVisitEqual1,totalScore1,pointByScore2,pointByAnalogScore2,pointByLocalEqual2,pointByVisitEqual2,totalScore2,pointByWin1,pointByWin2, renderPoint, rederPointVirtualGame})
 return data
-
 }
 
-//Esta función es llamada por 
+//Esta función es llamada por getGameAndBetFinal para crear el partido de 3 y 4
 const createGameThirdhAndFourth = async(idUser,gameStruct)=>{
   const games= await Game.find().lean()
   const betGames=await BetGame.find({idUser}).lean()
@@ -316,6 +399,6 @@ const createGameThirdhAndFourth = async(idUser,gameStruct)=>{
   
   // Inicio proceso de guardado de los equipos para conformar la apuesta del juego tercero y cuarto
   await BetGame.findOneAndUpdate({ idUser, idGame:idThirdhAndFourth}, {betLocalTeam:localTeamThirdhAndFourth, betVisitTeam:visitTeamThirdhAndFourth})
-  }
+}
 
 module.exports = {getGameAndBet, getBetClassificationByGroup, getGameAndBetByPhase, getGameAndBetFinal, createGameThirdhAndFourth}

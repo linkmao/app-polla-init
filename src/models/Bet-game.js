@@ -10,7 +10,7 @@ betVisitTeam:{type:String, required:true, default:"NO-BET"},
 localScore:{type:Number, required:true},
 visitScore:{type:Number, required:true},
 analogScore:{type:String, required:true},
-earnedScore:{type:Number, default:0},
+earnedScore:{type:Array, default:[0,0,0,0]},
 created_at:{type:Date, default:Date.now}
 },
 {versionKey:false})

@@ -89,3 +89,20 @@ Cuando el proyecto esté bien maduro e debe crear interfaz para la configuracion
 - Insersion datos al modelo Group
 - Insersion datos al modelo Game
 - Insersion datos al modelo BetGame (el cual se da durante el desarrollo de los juegos)
+
+
+## Consideraciones para el admin, para gestión del juego en su puesta en marcha
+
+### Cracion de juego para cada apostador
+A cada apostador se le genera una estructura de juego que depende de la estructura de juego configurada por admin, es por ello que ANTES DE INICIAR EL TORNEO, el admin debe crear los modelos y la estructura de juego, ya que por ejemplo betGame de apostador se crea a partir de Game de admin, eso no sucede cn betClassification, ya que su creación NO pedende de Classification
+
+### Puntaje por ganador del juego de terceros y cuartos y final
+Para que estos dos ultimos juegos tengan la misma estructura de ganar 3 puntos si el equpo se elige como ganador, entonces se creó el juego virtual 65. El admin debe en ese juego lo siguiente
+    - localTeam: ganador juego 63 (3 y 4)
+    - visitTeam: ganador juego 64 (final)
+    - forCalculate: false
+Posteriormente, para que e calculo se de se debe usar forCalculate, colocando resulatdos ficticios no posibles, para que el sistema no calcule resultado por puntaje, se recomienda entonces
+    - localScore: -2
+    - analogScore:"-2"
+    - visitScore:-2
+    - forCalculate:true

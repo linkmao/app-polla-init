@@ -21,7 +21,8 @@ const addClassification = async (req, res)=>{
 const updateClassification  = async (req, res)=>{
     const classificationUpdate = await Classification.findByIdAndUpdate(req.params.id, req.body,{new:true}) 
     res.status(200).json(classificationUpdate)
-    await calculatePointByClassification(req.body.group)
+    // Si en el body envio forCalculate, me calcula los puntajes
+    if (req.body.forCalculate) await calculatePointByClassification(req.body.group)
   }
 
 const deleteClassification = async (req, res)=>{
