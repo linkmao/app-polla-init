@@ -31,21 +31,13 @@ const addGame = async (req, res)=>{
     res.status(201).json({"message":"Juego guardado"})}
 
 
-// La funcion updateGame, tiene dos usos 1) actualizar el juego a Jugado y ejecutar la funcion calcilatePointByGame el cual calcula en todas las apuestas asociadas al juego actualizado, el puntaje ganado, para acceder esta funcionalidad se debe enviar por json el parametro forCalculate en true.
-
-// 2) Actualizar o modificar cualquier juego, en cualquiera de sus parametros, pero no ejecuta calculo alguno de puntajes
+// Solo si forCalculate es true, el sistema hace el calculo del los puntajes, y coloca el estado del partide played en true
 
 const updateGame  = async (req, res)=>{
-  if (req.body.forCalculate ) {
-    const {localScore, visitScore, analogScore} = req.body
-    const gameUpdate = await Game.findByIdAndUpdate(req.params.id, {localScore,visitScore, analogScore, played:true},{new:true})
+    const gameUpdate = await Game.findByIdAndUpdate(req.params.id, req.body,{new:true})
     res.status(200).json(gameUpdate)
-    await calculatePointByGame(req.params.id)
-    } else {
-    const gameUpdate = await Game.findByIdAndUpdate(req.params.id, req.body,{new:true}) 
-    res.status(200).json(gameUpdate)
+    if (req.body.forCalculate) await calculatePointByGame(req.params.id) 
     }
- }
 
 const deleteGame = async (req, res)=>{
         await Game.findByIdAndDelete(req.params.id)

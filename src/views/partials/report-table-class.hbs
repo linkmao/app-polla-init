@@ -1,0 +1,31 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Grupo o fase</th>
+      <th scope="col">puntaje por primero</th>
+      <th scope="col">Puntaje por segundo</th>
+      <th scope="col">Puntaje por tercero</th>
+      <th scope="col">Puntaje por cuarto</th>
+      <th scope="col">TOTAL </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each dataTableClass}}
+    <tr>
+      <th scope="row">{{#if dataFlags.phase }} {{dataFlags.phase}} {{else}} {{dataTablePoint.group}}{{/if}}</th>
+      <td>{{dataTablePoint.totalFirst}}</td>
+      <td>{{dataTablePoint.totalSecond}}</td>
+      {{#if dataFlags.renderFinal}}<td>{{dataTablePoint.totalThird}}</td>
+      {{else}}
+      <td class="table-secondary"></td>
+      {{/if}}
+      {{#if dataFlags.renderFinal}}<td>{{dataTablePoint.totalFourth}}</td>
+      {{else}}
+      <td class="table-secondary"></td>
+      {{/if}}
+      <td class="table-success"> {{dataTablePoint.total}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

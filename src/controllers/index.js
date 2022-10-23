@@ -5,6 +5,7 @@ const Team = require('../models/Team')
 const config = require('../config/config')
 
 
+
 // Controlador para juegos por grupos (phase 1)
 const getGameAndBet = async (phase,group,idUser)=>{
   const games= await Game.find({phase, group}).lean()
@@ -138,7 +139,7 @@ teamFour=teams.find(t=>t._id==teamFourId).name
 //Obtencion de los puntajes ganado en la apuesta
 let totalScore=0
 const pointByFirst = e.earnedScore[config.xPointByFirst]
-const pointBySecond=e.earnedScore[config.xPointByFirst]
+const pointBySecond=e.earnedScore[config.xPointBySecond]
 const pointByThirdh=e.earnedScore[config.xPointByThirdh]
 const pointByFourth=e.earnedScore[config.xPointByFourth]
 e.earnedScore.forEach(s=>totalScore+=s)
@@ -358,6 +359,66 @@ totalScore2+=pointByWin2
 return data
 }
 
+
+
+// Controlador encargado de sumar todos los puntos del los partidos de un grupo, entrega {group, idUser, totalScore, totalAnalog, totalLocal, totalVisit, totalByGroup}
+const getPointGameGroup = async (group, idUser)=>{
+   const betGames=await BetGame.find({idUser}).lean()
+   const games= await Game.find({group}).lean()
+   const sumPuntajes=[0,0,0,0]
+      games.forEach(g=>{
+         const puntajes=betGames.find(b=>b.idGame==g._id).earnedScore
+         puntajes.forEach((p,i)=>{sumPuntajes[i]+=p})
+       })
+   let total=0
+   sumPuntajes.forEach(s=>{total+=s})
+
+return {group,idUser,totalScore:sumPuntajes[config.xPointByScore], totalAnalog:sumPuntajes[config.xPointByAnalogScore], totalLocalEqual:sumPuntajes[config.xPointByLocalEqual], totalVisitEqual:sumPuntajes[config.xPointByVisitEqual], total}
+}
+
+// Controlador encargado de sumar todos los puntos del los partidos de las phases  entrega {phase, idUser, totalScore, totalAnalog, totalLocal, totalVisit, totalByClass}
+const getPointGamePhase = async (phase, idUser)=>{
+  const betGames=await BetGame.find({idUser}).lean()
+  const games= await Game.find({phase}).lean()
+  const sumPuntajes=[0,0,0,0]
+     games.forEach(g=>{
+        const puntajes=betGames.find(b=>b.idGame==g._id).earnedScore
+        puntajes.forEach((p,i)=>{sumPuntajes[i]+=p})
+      })
+  let total=0
+  sumPuntajes.forEach(s=>{total+=s})
+  
+return {phase,idUser,totalScore:sumPuntajes[config.xPointByScore], totalAnalog:sumPuntajes[config.xPointByAnalogScore], totalLocalEqual:sumPuntajes[config.xPointByLocalEqual], totalVisitEqual:sumPuntajes[config.xPointByVisitEqual], total}
+}
+
+// Controlador encargado de sumar todos los puntos del los partidos de un grupo, entrega {group, idUser, totalScore, totalAnalog, totalLocal, totalVisit, totalByGroup}
+const getPointClassification = async (group, idUser)=>{
+  try { // Como me esta dando un error (el de siempre) medio lo arregle con este try, pero... debo solucionar definitivamente ese probelma
+    const betClassification=await BetClassification.find({group, idUser}).lean()
+    const puntajes=betClassification[0].earnedScore
+   let total=0
+    puntajes.forEach(p=>{total+=p})
+    return {group,idUser,totalFirst:puntajes[config.xPointByFirst], totalSecond:puntajes[config.xPointBySecond], totalThird:puntajes[config.xPointByThirdh], totalFourth:puntajes[config.xPointByFourth], total}
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+// Controlador encargado de traer los datos de earnedScore del gamePhantom
+const getPointGamePhantom =async(gameNumber, idUser)=>{
+  const game = await Game.find({gameNumber}).lean()
+  const idGame=game[0]._id
+  const betGame=await BetGame.find({idUser}).lean()
+  const earnedScore= betGame.find(b=>b.idGame==idGame).earnedScore
+  let total=0
+  earnedScore.forEach(e=>{total+=e})
+  console.log(earnedScore)
+
+  return {group:"FINAL",idUser, totalScore:earnedScore[config.xPointByScore], totalAnalog:earnedScore[config.xPointByAnalogScore], totalLocalEqual:earnedScore[config.xPointByLocalEqual], totalVisitEqual:earnedScore[config.xPointByVisitEqual], total}
+
+}
+
 //Esta función es llamada por getGameAndBetFinal para crear el partido de 3 y 4
 const createGameThirdhAndFourth = async(idUser,gameStruct)=>{
   const games= await Game.find().lean()
@@ -401,4 +462,56 @@ const createGameThirdhAndFourth = async(idUser,gameStruct)=>{
   await BetGame.findOneAndUpdate({ idUser, idGame:idThirdhAndFourth}, {betLocalTeam:localTeamThirdhAndFourth, betVisitTeam:visitTeamThirdhAndFourth})
 }
 
-module.exports = {getGameAndBet, getBetClassificationByGroup, getGameAndBetByPhase, getGameAndBetFinal, createGameThirdhAndFourth}
+
+const sumTotalPoint = (arrayPoints) =>{
+  // Esta funcion recbe un array de objetos, de los puntajes que se qioere totalizar, por convención solo se tatalizara con la suma del ultimo elemento de cada objeto (elemento llamado total)
+try{
+  let totalPoint =0
+  arrayPoints.forEach(e=>{
+    totalPoint+=e.total
+  })
+  return totalPoint
+} catch (error) {
+  console.error(error);
+}
+
+
+}
+
+// FUNCIONES TOTALIZADORAS DE PUNTAJE DE UN JUGADOR CON ID
+const totalPointByGameGroups=async(idUser)=>{
+  return  (await getPointGameGroup("A", idUser)).total+(await getPointGameGroup("B", idUser)).total+(await getPointGameGroup("C", idUser)).total+(await getPointGameGroup("D", idUser)).total+(await getPointGameGroup("E", idUser)).total+(await getPointGameGroup("F", idUser)).total+(await getPointGameGroup("G", idUser)).total+(await getPointGameGroup("H", idUser)).total
+}
+
+const totalPointByGamePhases=async(idUser)=>{
+  return (await getPointGamePhase(config.phaseEighth, idUser)).total+(await getPointGamePhase(config.phaseFourth, idUser)).total+(await getPointGamePhase(config.phaseSemiFinals, idUser)).total+(await getPointGamePhase(config.phaseFinal, idUser)).total+(await getPointGamePhantom(65, idUser)).total
+  }
+
+const totalPointByClassification=async(idUser)=>{
+  return (await getPointClassification("A", idUser)).total+(await getPointClassification("B", idUser)).total+(await getPointClassification("C", idUser)).total+(await getPointClassification("D", idUser)).total+(await getPointClassification("E", idUser)).total+(await getPointClassification("F", idUser)).total+(await getPointClassification("G", idUser)).total+(await getPointClassification("H", idUser)).total
+}
+
+const totalPointByClassificationFinal=async(idUser)=>{return(await getPointClassification("FINAL", idUser)).total}
+
+const totalPointPhaseOne=async (idUser)=>{
+  const byGames = await totalPointByGameGroups(idUser)
+  const byClass = await totalPointByClassification(idUser)
+  const total= byGames+byClass
+  return total
+}
+
+const totalPointPhaseTwo=async (idUser)=>{
+  const byGames = await totalPointByGamePhases(idUser)
+  const byClass = await totalPointByClassificationFinal(idUser)
+  const total= byGames+byClass
+  return total
+}
+
+const greatTotal = async (idUser)=>{
+  const phaseOne = await totalPointPhaseOne(idUser)
+  const phaseTwo = await totalPointPhaseTwo(idUser)
+  const total =phaseOne+phaseTwo
+  return total
+}
+
+module.exports = {getGameAndBet, getBetClassificationByGroup, getGameAndBetByPhase, getGameAndBetFinal,  createGameThirdhAndFourth,  getPointGameGroup, getPointGamePhase, getPointClassification, getPointGamePhantom, sumTotalPoint,totalPointByGameGroups, totalPointByGamePhases, totalPointByClassification, totalPointByClassificationFinal, totalPointPhaseOne, totalPointPhaseTwo, greatTotal}

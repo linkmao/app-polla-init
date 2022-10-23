@@ -14,8 +14,8 @@ phaseInitial:1,
 phaseEighth:2,
 phaseFourth:3,
 phaseSemiFinals:4,
-phaseThirdFourth:5,
-phaseFinal:6,
+// phaseThirdFourth:5,
+phaseFinal:5, // esta fase tiene el juego de terceros y cuartos y el de final
 // La siguinte configuracion está asociado a la información necesaria para crear las apuestas de las etapas de cuartos de final, semifinal , y finales
 // La estructura para la conformación de los partidos de ocatavo de final en adelante se realiza con eesta configuración, cada array se compone de [juego1, juego2, juego3] donde juego3 se conforma con los ganadores de juego1 y juego2 respectivamente
 gamesEighth:[[49,50,57],[53,54,58],[51,52,59],[55,56,60]],

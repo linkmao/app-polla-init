@@ -96,13 +96,23 @@ Cuando el proyecto esté bien maduro e debe crear interfaz para la configuracion
 ### Cracion de juego para cada apostador
 A cada apostador se le genera una estructura de juego que depende de la estructura de juego configurada por admin, es por ello que ANTES DE INICIAR EL TORNEO, el admin debe crear los modelos y la estructura de juego, ya que por ejemplo betGame de apostador se crea a partir de Game de admin, eso no sucede cn betClassification, ya que su creación NO pedende de Classification
 
+El motivo por el que betClassification no se crea a partir de Classification se debe a que el parametro que los relaciona es group, y todas las consultas se hacen con base en gruop, en cambio en betGame, está el parametro idGame que es el id del juego guardado en Game.
+
+Considero que para no perder la estructura de consultas, en futuras versiones betClassification y Classification deberan estan relacionadas por idClassification tal como sucede con Game y betGame
+
+### Insersion de equipos clasificados
+En el modelo classification solo se debe ingresar firstTeam, secondTeam para la fase grupos
+Para la fase FINAL se deben colocat firstTeam, secondTeam, thirdTeam, fourthTeam
+Importante: No es necesario colocar el grupo, pues la implementación toma el grupo del modelo consultado
+
+
 ### Puntaje por ganador del juego de terceros y cuartos y final
 Para que estos dos ultimos juegos tengan la misma estructura de ganar 3 puntos si el equpo se elige como ganador, entonces se creó el juego virtual 65. El admin debe en ese juego lo siguiente
     - localTeam: ganador juego 63 (3 y 4)
     - visitTeam: ganador juego 64 (final)
-    - forCalculate: false
-Posteriormente, para que e calculo se de se debe usar forCalculate, colocando resulatdos ficticios no posibles, para que el sistema no calcule resultado por puntaje, se recomienda entonces
     - localScore: -2
     - analogScore:"-2"
     - visitScore:-2
     - forCalculate:true
+
+    Es importante que localScore, analogScore y visitScore tengan valores no comparables con cualquier resultado posible

@@ -8,8 +8,13 @@ const betClassification = require('../models/Bet-classification')
 
 // Funcion que permite calcular en cada apuesta que tenga el idGame enviado, el puntaje ganado, ademas guarda el puntaje en earnedScore 
 const calculatePointByGame = async (id) => {
+
+// Actualizo el juego con parametro played en true 
+await game.findByIdAndUpdate(id, {played:true},{new:true}) 
 games= await game.find({_id:id})
 betGames = await betGame.find({idGame:id})
+
+
 betGames.forEach(async e=>{
 // Analisis por puntaje y por localia
 let earnedScore = [0,0,0,0]
