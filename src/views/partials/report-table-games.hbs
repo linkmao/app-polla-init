@@ -31,6 +31,13 @@
       {{/if}}
       <td class="table-success"> {{dataTablePoint.total}}</td>
     </tr>
+    {{#if dataFlags.totalizerGame}}
+    <tr>
+      <th scope="row" colspan="6">TOTAL</th>
+      <td ><h4>{{dataFlags.totalizerGame}}</h4></td>
+    </tr>
+    {{/if}}
+
     {{/each}}
   </tbody>
 </table>

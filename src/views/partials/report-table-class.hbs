@@ -20,12 +20,19 @@
       {{else}}
       <td class="table-secondary"></td>
       {{/if}}
-      {{#if dataFlags.renderFinal}}<td>{{dataTablePoint.totalFourth}}</td>
-      {{else}}
+      {{#if dataFlags.renderFinal}}
+      <td>{{dataTablePoint.totalFourth}}</td>{{else}}
       <td class="table-secondary"></td>
       {{/if}}
       <td class="table-success"> {{dataTablePoint.total}}</td>
     </tr>
+    {{#if dataFlags.renderFinal}}
+      <tr>
+      <th scope="row" colspan="5">TOTAL</th>
+      <td><h4>{{dataFlags.totalizerClass}}</h4></td>
+      </tr>
+    {{/if}}
+
     {{/each}}
   </tbody>
 </table>

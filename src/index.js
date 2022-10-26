@@ -16,8 +16,10 @@ const flash = require('connect-flash') // Para el envio de mensajes del backend 
 const passport = require('passport') // Passport y sus dependencias auxiliares
 const session = require('express-session') // Passport y sus dependencias auxiliares
 const path = require('path') // para la obtencion de rutas del proyecto
+// const cors = require('cors');
 
 const app = express()
+
 dotenv.config() // Permite que funcionen las variables de entorno
 
 // Configuracion
@@ -28,6 +30,7 @@ require('./config/passport') // codigo de configuracion de passport
 app.set('port', process.env.PORT || 3000)
 app.set('views', path.join(__dirname, 'views'))
 app.set('public', path.join(__dirname, 'public'))
+
 
 // Configuracion del motor de plantilla html
 app.engine('.hbs', exphbs.engine({
@@ -40,6 +43,7 @@ app.set('view engine', '.hbs') // con esta linea queda lista la configuracion de
 
 //Midleware
 // app.use(morgan('dev')) // Permite monitorear el tipo de peticion que se estpa haciendo
+
 app.use(express.json()) // Permite que el servidor pueda responder con json
 app.use(express.static(app.get('public'))) //Configuracion carpeta publica (archivos estaticos) 
 app.use(express.urlencoded({ extended: true })) // envio de datos de fomrulario al backend
@@ -52,6 +56,7 @@ app.use(session({
 app.use(flash()) // Para el envio de mensajes
 app.use(passport.initialize()) // Para usa passport
 app.use(passport.session())  // para usar passport con session
+
 
 
 

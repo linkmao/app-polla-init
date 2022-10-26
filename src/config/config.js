@@ -24,7 +24,8 @@ gamesSemi:[[61,62,64]],
 // finalStruct contiene los juegos para alrmar la estructura de los dos juegos finales (tercero y cuarto y finales), si bien gamesSemi tiene la estructura para armar el juego final, debido a que se requiere otra logica para el juego de tercero y cuarto se implementa de estamanera, el orden de los datos correspondiente al numero de juego de los partidos necesrios es el siguiente
 // virtualNextGame es un juego que no se da (el siguiente a la final) y solo es para que sirva como almacenamiento para el equipo ganador de la final y de terceros y cuartos y así poder dar puntaje por ellos como en el resto esquema de clasificaciones
 //[Juego-semifinal-1, juego-semifinal-2, juego-tercero-y-cuarto, juego-final, virtualNexGame]
-finalStruct:[61,62,63,64,65],
+gamePhantom:65,
+finalStruct:[61,62,63,64,this.gamePhantom],
 // Posicion de los diferents puntajes parciales en el array earnedScore del modelo betGames
 xPointByScore:0,
 xPointByAnalogScore:1,
