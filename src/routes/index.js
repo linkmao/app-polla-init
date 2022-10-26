@@ -19,15 +19,11 @@ router.get('/routegames', validar.isAuth, async (req, res) => {
 router.get('/groups/:g', validar.isAuth, async (req, res) => { 
 const dataBet=await getGameAndBet(req.params.g,req.user.id) //config.phaseInitial,
 const dataClassification = await getBetClassificationByGroup(req.params.g,req.user.id)
-// const dataPointGames=await getPointGameGroup(req.params.g, req.user.id)
-// const dataPointClass=await getPointClassification(req.params.g, req.user.id)
-// const total=sumTotalPoint([dataPointGames,dataPointClass]) 
-console.log('**REPORTE RUTA***')
-console.log(req.params.g)
-// console.log(total)
-// const dataPoint=[{dataPointGames, dataFlags:{renderGroup:true,  renderClassification:true, total}}]
-// const dataPoint=[{t:{d:1000} , dataFlags:{renderEqualTeam:true} }]
-res.render('games', {dataBet})
+const dataPointGames=await getPointGameGroup(req.params.g, req.user.id)
+const dataPointClass=await getPointClassification(req.params.g, req.user.id)
+const total= sumTotalPoint([dataPointGames,dataPointClass]) 
+const dataPoint=[{dataPointGames, dataFlags:{renderGroup:true,  renderClassification:true, total}}]
+res.render('games', {dataBet, dataClassification, dataPoint})
 })
 
 router.get('/eighth', validar.isAuth, async (req, res) => {
@@ -92,7 +88,5 @@ router.get('/admin/users', validar.isAuth, validar.isAdmin, async (req, res) => 
 router.get('/admin/pass-restore', validar.isAuth, validar.isAdmin, async (req, res) => {
   res.render('admin/pass-restore')
 })
-
-
 
 module.exports = router

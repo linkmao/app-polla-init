@@ -34,7 +34,7 @@ const getGameAndBet = async (group,idUser)=>{//phase,
     const pointByAnalogScore=earnedScore[config.xPointByAnalogScore]
     data.push({idBet,gameNumber,  group, localTeam, visitTeam, localFlag,visitFlag,localScore,visitScore,analogScore, totalScore, pointByScore,pointByAnalogScore})
    })
-console.log("Metodo interno GAMES")   
+ 
 return data  
 }
 
@@ -148,7 +148,7 @@ let renderFinal
 
 data.push({group,idUser,betFirstTeam, flagFirstTeam, betSecondTeam,flagSecondTeam,betThirdTeam,flagThirdTeam,betFourthTeam,flagFourthTeam,teamOne,teamOneId,teamTwo,teamTwoId,teamThree,teamThreeId,teamFour,teamFourId, pointByFirst,pointBySecond,pointByThirdh,pointByFourth,totalScore,renderFinal})
   }) // fin del método
- console.log("Metodo interno CLASIFICACION")
+
 return data
 }
 
@@ -201,8 +201,7 @@ const getGameAndBetByPhase =async (phase, gamesPhase,idUser)=>{
     let analogScore2=betGames.find(b=>b.idGame==idGame2).analogScore
     const earnedScore2=betGames.find(b=>b.idGame==idGame2).earnedScore
 
-    console.log(earnedScore1)
-    console.log(earnedScore2)
+  
     {localScore1==-1 ? localScore1="" : localScore1 }
     {visitScore1==-1 ? visitScore1="" : visitScore1}
     {analogScore1==-1 ? analogScore1="": analogScore1}
@@ -245,8 +244,6 @@ const getGameAndBetByPhase =async (phase, gamesPhase,idUser)=>{
     
     let renderPoint = true
     if (phase==config.phaseEighth) renderPoint=false
-    
-    
     data.push({phase,gameNumber1, localTeamId1, localTeam1, localFlag1, visitTeamId1, visitTeam1, visitFlag1,gameNumber2, localTeamId2, localTeam2,localFlag2, visitTeamId2, visitTeam2, visitFlag2, idBet1, localScore1, visitScore1, analogScore1, totalScore1,pointByScore1,pointByAnalogScore1,pointByLocalEqual1,pointByVisitEqual1 , idBet2, localScore2, visitScore2, analogScore2, totalScore2,pointByScore2,pointByAnalogScore2, pointByLocalEqual2, pointByVisitEqual2, idNextGame, betLocalTeam, betVisitTeam, betLocalFlag, betVisitFlag, renderPoint})
 
   })
@@ -311,7 +308,7 @@ let localTeamId1=null, visitTeamId1=null, localTeamId2=null, visitTeamId2=null
 const idVirtualGame =  games.find(g=>g.gameNumber==gameStruct[4])._id
 const pointByWin1=  betGames.find(b=>b.idGame==idVirtualGame).earnedScore[config.xPointByLocalEqual]
 const pointByWin2=  betGames.find(b=>b.idGame==idVirtualGame).earnedScore[config.xPointByVisitEqual]
-console.log(pointByWin2)
+
 let totalScore1=0, totalScore2=0
 earnedScore1.forEach(e=>{totalScore1+=e}) 
 earnedScore2.forEach(e=>{totalScore2+=e})
@@ -357,8 +354,6 @@ totalScore2+=pointByWin2
 return data
 }
 
-
-
 // Controlador encargado de sumar todos los puntos del los partidos de un grupo, entrega {group, idUser, totalScore, totalAnalog, totalLocal, totalVisit, totalByGroup}
 const getPointGameGroup = async (group, idUser)=>{
    const betGames=await BetGame.find({idUser}).lean()
@@ -391,17 +386,17 @@ return {phase,idUser,totalScore:sumPuntajes[config.xPointByScore], totalAnalog:s
 
 // Controlador encargado de sumar todos los puntos del los partidos de un grupo, entrega {group, idUser, totalScore, totalAnalog, totalLocal, totalVisit, totalByGroup}
 const getPointClassification = async (group, idUser)=>{
-  // try { // Como me esta dando un error (el de siempre) medio lo arregle con este try, pero... debo solucionar definitivamente ese probelma
+  try { // Como me esta dando un error (el de siempre) medio lo arregle con este try, pero... debo solucionar definitivamente ese probelma
     const betClassification=await BetClassification.find({group, idUser}).lean()
-    console.log(betClassification)
+    
     const puntajes= betClassification[0].earnedScore
     let total=0
     
     for (p of puntajes){total+=p}
     return {group,idUser,totalFirst:puntajes[config.xPointByFirst], totalSecond:puntajes[config.xPointBySecond], totalThird:puntajes[config.xPointByThirdh], totalFourth:puntajes[config.xPointByFourth], total}
-    //   } catch (error) {
-  //   console.error(error);
-  // }
+      } catch (error) {
+    console.error(error);
+  }
 }
 
 // Controlador encargado de traer los datos de earnedScore del gamePhantom
@@ -427,8 +422,6 @@ try{
 } catch (error) {
   console.error(error);
 }
-
-
 }
 
 //Esta función es llamada por getGameAndBetFinal para crear el partido de 3 y 4
