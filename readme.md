@@ -145,3 +145,8 @@ y listo
 4.  En package.json se debe tener el script "start": "node scr/index.js" o el necesario para ejecutar el index
 5. Hacer login en heroku
     $ heroku login
+    $ git init
+    $ heroku git:remote -a [nombre app en heroku] 
+    $ git add .
+    $ git commit -m "Message"
+    $ git push heroku master
