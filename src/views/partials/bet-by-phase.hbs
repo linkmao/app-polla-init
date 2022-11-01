@@ -1,39 +1,41 @@
 {{#each dataGameAndBet}}
 <section class="bet-games">
-
-
 {{!-- RENDERIZADO DEL GAME --}}
+<a name="{{dataBet.idBet1}}"></a>
 <div class="card" style="width: 200 px;">
     {{!-- <img src="..." class="card-img-top" alt="..."> --}}
     <div class="card-body">
-      <h5 class="card-title">Juego número: {{dataGame.gameNumber1}}</h5>
-      <div class="row">
-        <div class="col"><img src="/img/flags/{{dataGame.localFlag1}}" alt="flag" width="50%"></div>
-        <div class="col">
-          <p class="card-text">{{dataGame.localTeam1}}</p>
-        </div>
-        <div class="col"><img src="/img/flags/{{dataGame.visitFlag1}}" alt="flag" width="50%"></div>
-        <div class="col">
-          <p class="card-text">{{dataGame.visitTeam1}}</p>
-        </div>
+    <h6 class="card-title">Juego número: {{dataGame.gameNumber1}}</h6>
+    <div class="row">
+      <div class="col">
+        <img src="/img/flags/{{dataGame.localFlag1}}" alt="flag" width="70%">
       </div>
-      <div class="row">
-        <div class="col">
-          <h2 class="card-text">{{dataGame.localScore1}}</h2>
-        </div>
-        <div class="col">
-          <p>Apuesta analoga: </p>
-          <h2>{{dataGame.analogScore1}}</h2>
-        </div>
-        <div class="col">
-          <h2 class="card-text">{{dataGame.visitScore1}}</h2>
-        </div>
+      <div class="col">
+        <p class="card-text text ">{{dataGame.localTeam1}}</p>
       </div>
-         </div>
+      <div class="col-1">
+        <h5 class="card-text">{{dataGame.localScore1}}</h5>
+      </div>
+      <div class="col-1">
+        <h5>{{dataGame.analogScore1}}</h5>
+      </div>
+      <div class="col-1">
+        <h5 class="card-text">{{dataGame.visitScore1}}</h5>
+      </div>
+       <div class="col">
+        <p class="card-text">{{dataGame.visitTeam1}}</p>
+      </div>
+        <div class="col">
+        <img src="/img/flags/{{dataGame.visitFlag1}}" alt="flag" width="70%">
+      </div>
+      
+    </div>
   </div>
+</div>
 {{!-- FIN DEL RENDERIZADO DEL GAME --}}
 
 {{!-- INICIO RENDERIZADO BET 1 --}}
+
   <div class="card" style="width: 200 px;">
     {{!-- <img src="..." class="card-img-top" alt="..."> --}}
     <div class="card-body">
@@ -43,33 +45,34 @@
         <div class="col">
           <p class="card-text">{{dataBet.localTeam1}}</p>
         </div>
-        <div class="col"><img src="/img/flags/{{dataBet.visitFlag1}}" alt="flag" width="50%"></div>
+        
         <div class="col">
           <p class="card-text">{{dataBet.visitTeam1}}</p>
         </div>
+        <div class="col"><img src="/img/flags/{{dataBet.visitFlag1}}" alt="flag" width="50%"></div>
       </div>
       <div class="row">
         <div class="col">
-          <h2 class="card-text">{{dataBet.localScore1}}</h2>
+          <h2 class="card-text text-end">{{dataBet.localScore1}}</h2>
         </div>
         <div class="col">
-          <p>Apuesta analoga: </p>
-          <h2>{{dataBet.analogScore1}}</h2>
+          
+          <h2 class="card-text text-center">{{dataBet.analogScore1}}</h2>
         </div>
         <div class="col">
-          <h2 class="card-text">{{dataBet.visitScore1}}</h2>
+          <h2 class="card-text text-start">{{dataBet.visitScore1}}</h2>
         </div>
       </div>
-      <p>Puntos por resultado: {{dataBet.pointByScore1}}</p>
-      <p>Puntos por L-E-V: {{dataBet.pointByAnalogScore1}}</p>
+      <p class="mb-0 small">Puntos por resultado: {{dataBet.pointByScore1}}</p>
+      <p class="mb-0 small">Puntos por L-E-V: {{dataBet.pointByAnalogScore1}}</p>
       {{#if renderPoint}}
-      <p>Puntos por local coincidente: {{dataBet.pointByLocalEqual1}}</p>
-      <p>Puntos por visitante coincidente: {{dataBet.pointByVisitEqual1}}</p>
+      <p class="mb-0 small">Puntos por local coincidente: {{dataBet.pointByLocalEqual1}}</p>
+      <p class="mb-0 small">Puntos por visitante coincidente: {{dataBet.pointByVisitEqual1}}</p>
         {{#if rederPointVirtualGame}}
-          <p>Puntos por ganador: {{dataBet.pointByWin1}}</p>
+          <p class="mb-0 small">Puntos por ganador: {{dataBet.pointByWin1}}</p>
         {{/if}}
       {{/if}}
-      <p>PUNTOS TOTAL: {{dataBet.totalScore1}}</p>
+      <h6 class="mb-0 small">PUNTOS TOTAL: {{dataBet.totalScore1}}</h6>
     </div>
 
     <div class="card-footer">
@@ -108,17 +111,17 @@
           </div>
           
           <div class="row">
-            <div class="col-2">
-              Clasifica:
+            <div class="col-3  p-0">
+                <p class="text-start small">Clasifica:</p> 
             </div>
-            <div class="col-2">
+            <div class="col-2 p-0">
               <img src="/img/flags/{{dataBet.betLocalFlag}}" alt="flag" width="70%">
             </div>
             <div class="col-3">
-              {{dataBet.betLocalTeam}}
+              <p class="text-left">{{dataBet.betLocalTeam}}</p>
             </div>
-            <div class="col-5">
-              <div class="mb-3">
+            <div class="col p-0">
+              <div class="mb-2">
                 <select class="form-select" aria-label="Default select example" id="select" name="betLocalTeam" required>
                   <option value={{dataBet.localTeamId1}}>{{dataBet.localTeam1}}</option>
                   <option value={{dataBet.visitTeamId1}}>{{dataBet.visitTeam1}}</option>
@@ -138,49 +141,47 @@
 
 {{!-- FIN RENDERIZADO BET1 --}}
 
-
-
-
-
-
-
-
-
+<br>
   {{!-- INICIO DE LA INFORMACIÓN DEL SEGUNDO PARTIDO --}}
 
+<a name="{{dataBet.idBet2}}"></a>
 <div class="card" style="width: 200 px;">
     {{!-- <img src="..." class="card-img-top" alt="..."> --}}
-    <div class="card-body">
-      <h5 class="card-title">Juego número: {{dataGame.gameNumber2}}</h5>
-      <div class="row">
-        <div class="col"><img src="/img/flags/{{dataGame.localFlag2}}" alt="flag" width="50%"></div>
-        <div class="col">
-          <p class="card-text">{{dataGame.localTeam2}}</p>
-        </div>
-        <div class="col"><img src="/img/flags/{{dataGame.visitFlag2}}" alt="flag" width="50%"></div>
-        <div class="col">
-          <p class="card-text">{{dataGame.visitTeam2}}</p>
-        </div>
+    
+   <div class="card-body">
+    <h6 class="card-title">Juego número: {{dataGame.gameNumber2}}</h6>
+    <div class="row">
+      <div class="col">
+        <img src="/img/flags/{{dataGame.localFlag2}}" alt="flag" width="70%">
       </div>
-      <div class="row">
-        <div class="col">
-          <h2 class="card-text">{{dataGame.localScore2}}</h2>
-        </div>
-        <div class="col">
-          <p>Apuesta analoga: </p>
-          <h2>{{dataGame.analogScore2}}</h2>
-        </div>
-        <div class="col">
-          <h2 class="card-text">{{dataGame.visitScore2}}</h2>
-        </div>
+      <div class="col">
+        <p class="card-text">{{dataGame.localTeam2}}</p>
       </div>
-         </div>
+      <div class="col">
+        <h5 class="card-text">{{dataGame.localScore2}}</h5>
+      </div>
+      <div class="col">
+        <h5>{{dataGame.analogScore2}}</h5>
+      </div>
+      <div class="col">
+        <h5 class="card-text">{{dataGame.visitScore2}}</h5>
+      </div>
+       <div class="col">
+        <p class="card-text">{{dataGame.visitTeam2}}</p>
+      </div>
+        <div class="col">
+        <img src="/img/flags/{{dataGame.visitFlag2}}" alt="flag" width="70%">
+      </div>
+      
+    </div>
   </div>
+</div>
 {{!-- FIN DE GAME 2 --}}
 
 
 
 {{!-- INICIO DE BET 2 --}}
+
   <div class="card" style="width: 200 px;">
     {{!-- <img src="..." class="card-img-top" alt="..."> --}}
     <div class="card-body">
@@ -190,33 +191,34 @@
         <div class="col">
           <p class="card-text">{{dataBet.localTeam2}}</p>
         </div>
-        <div class="col"><img src="/img/flags/{{dataBet.visitFlag2}}" alt="flag" width="50%"></div>
+        
         <div class="col">
           <p class="card-text">{{dataBet.visitTeam2}}</p>
         </div>
+        <div class="col"><img src="/img/flags/{{dataBet.visitFlag2}}" alt="flag" width="50%"></div>
       </div>
       <div class="row">
         <div class="col">
-          <h2 class="card-text">{{dataBet.localScore2}}</h2>
+          <h2 class="card-text text-end">{{dataBet.localScore2}}</h2>
         </div>
         <div class="col">
-          <p>Apuesta analoga: </p>
-          <h2>{{dataBet.analogScore2}}</h2>
+          
+          <h2 class="card-text text-center">{{dataBet.analogScore2}}</h2>
         </div>
         <div class="col">
-          <h2 class="card-text">{{dataBet.visitScore2}}</h2>
+          <h2 class="card-text text-start">{{dataBet.visitScore2}}</h2>
         </div>
       </div>
-      <p>Puntos por resultado: {{dataBet.pointByScore2}}</p>
-      <p>Puntos por L-E-V: {{dataBet.pointByAnalogScore2}}</p>
+      <p class="mb-0 small">Puntos por resultado: {{dataBet.pointByScore2}}</p>
+      <p class="mb-0 small">Puntos por L-E-V: {{dataBet.pointByAnalogScore2}}</p>
       {{#if renderPoint}}
-      <p>Puntos por local coincidente: {{dataBet.pointByLocalEqual2}}</p>
-      <p>Puntos por visitante coincidente: {{dataBet.pointByVisitEqual2}}</p>
+      <p class="mb-0 small">Puntos por local coincidente: {{dataBet.pointByLocalEqual2}}</p>
+      <p class="mb-0 small">Puntos por visitante coincidente: {{dataBet.pointByVisitEqual2}}</p>
       {{#if rederPointVirtualGame}}
-          <p>Puntos por ganador: {{dataBet.pointByWin2}}</p>
+          <p class="mb-0 small">Puntos por ganador: {{dataBet.pointByWin2}}</p>
         {{/if}}
       {{/if}}
-      <p>PUNTOS TOTAL: {{dataBet.totalScore2}}</p>
+      <h6 class="mb-0 small">PUNTOS TOTAL: {{dataBet.totalScore2}}</h6>
     </div>
 
     <div class="card-footer">
@@ -256,18 +258,20 @@
           </div>
 
           
+
+
           <div class="row">
-            <div class="col-2">
-              Clasifica:
+            <div class="col-3  p-0">
+             <p class="text-start small">Clasifica:</p> 
             </div>
-            <div class="col-2">
-              <img src="/img/flags/{{dataBet.betVisitFlag}}" alt="flag" width="70%">
+            <div class="col-2 p-0">
+              <img src="/img/flags/{{dataBet.betVisitFlag}}" alt="flag" width="80%">
             </div>
-            <div class="col-3">
-              {{dataBet.betVisitTeam}}
+            <div class="col-3 ">
+              <p>{{dataBet.betVisitTeam}}</p>
             </div>
-            <div class="col-5">
-              <div class="mb-3">
+            <div class="col p-0">
+              <div class="mb-2">
                 <select class="form-select" aria-label="Default select example" id="select" name="betVisitTeam" required>
                   <option value={{dataBet.localTeamId2}}>{{dataBet.localTeam2}}</option>
                   <option value={{dataBet.visitTeamId2}}>{{dataBet.visitTeam2}}</option>
@@ -275,10 +279,7 @@
               </div>
             </div>
           </div>
-          
-
-
-          <div class="row">
+           <div class="row">
             <button type="submit" class="btn btn-primary mb-3">Apuesta!!</button>
           </div>
         </form>
@@ -288,6 +289,7 @@
 
 {{!-- FIN DE BET 2 --}}
 </section>
+</br>
 </br>
 </br>
 </br>

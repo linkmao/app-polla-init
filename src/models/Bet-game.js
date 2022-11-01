@@ -1,6 +1,5 @@
 // Modelo de apuestas
 const {Schema, model}= require('mongoose')
-
 const betGameSchema = new Schema({
 idGame:{type:String, required:true},
 idUser:{type:String, required:true},

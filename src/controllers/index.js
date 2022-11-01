@@ -6,6 +6,7 @@ const Team = require('../models/Team')
 const config = require('../config/config')
 
 
+
 // Controlador para juegos por grupos (phase 1)
 const getGameAndBet = async (group,idUser)=>{//phase,
   const games= await Game.find({ group}).lean() //phase,
@@ -44,20 +45,21 @@ const getGameByGroup= async (group)=>{
   const games= await Game.find({group}).lean()
   data=[]
   for (game of games){
+    const idGame=game._id
     const gameNumber= game.gameNumber
     const idLocalTeam = game.localTeam
     const idVisitTeam = game.visitTeam
     let localScore=game.localScore
     let visitScore= game.visitScore
     let analogScore= game.analogScore
-    const localName = teams.find(t=>t._id==idLocalTeam).name
+    const localTeam = teams.find(t=>t._id==idLocalTeam).name
     const localFlag = teams.find(t=>t._id==idLocalTeam).flag
-    const visitName = teams.find(t=>t._id==idVisitTeam).name
+    const visitTeam = teams.find(t=>t._id==idVisitTeam).name
     const visitFlag = teams.find(t=>t._id==idVisitTeam).flag
     {localScore==-1? localScore="-":localScore}
     {visitScore==-1? visitScore="-":visitScore}
     {analogScore==-1? analogScore="-":analogScore}
-    data.push({gameNumber,localName,localFlag,localScore,analogScore,visitScore,visitFlag,visitName})
+    data.push({idGame,gameNumber,localTeam,localFlag,localScore,analogScore,visitScore,visitFlag,visitTeam})
   }
 
 return data
@@ -69,7 +71,7 @@ const getGameByPhase= async(phase, gameStruct)=>{
   data=[]
   gameStruct.forEach(g=>{
   const gameNumber1=g[0]
-  const gameNumber2=g[1]
+  gameNumber2=g[1]
   
   // Datos de game 1
   const idTeamLocal1=games.find(game=>game.gameNumber==gameNumber1).localTeam
@@ -95,6 +97,40 @@ const getGameByPhase= async(phase, gameStruct)=>{
 
   data.push({gameNumber1, localTeam1, localFlag1, localScore1, analogScore1, visitScore1, visitFlag1, visitTeam1, gameNumber2, localTeam2, localFlag2, localScore2, analogScore2, visitScore2, visitFlag2, visitTeam2,localTeam2})
   })
+  return data
+}
+
+//Funcion encargada de llevar la información de los 2 games de la fase final
+const getGameByPhaseFinal = async(phase,gameStruct)=>{
+  const games= await Game.find({phase})
+  const teams= await Team.find()
+  data=[]
+  const gameNumber1=gameStruct[0]
+  const gameNumber2=gameStruct[1]
+
+  const idTeamLocal1=games.find(game=>game.gameNumber==gameNumber1).localTeam
+  const idTeamVisit1=games.find(game=>game.gameNumber==gameNumber1).visitTeam
+  const localScore1=games.find(game=>game.gameNumber==gameNumber1).localScore
+  const visitScore1=games.find(game=>game.gameNumber==gameNumber1).visitScore
+  const analogScore1=games.find(game=>game.gameNumber==gameNumber1).analogScore
+  const localTeam1=teams.find(t=>t._id==idTeamLocal1).name
+  const localFlag1=teams.find(t=>t._id==idTeamLocal1).flag
+  const visitTeam1=teams.find(t=>t._id==idTeamVisit1).name
+  const visitFlag1=teams.find(t=>t._id==idTeamVisit1).flag
+
+  //Datos del game 2
+  const idTeamLocal2=games.find(game=>game.gameNumber==gameNumber2).localTeam
+  const idTeamVisit2=games.find(game=>game.gameNumber==gameNumber2).visitTeam
+  const localScore2=games.find(game=>game.gameNumber==gameNumber2).localScore
+  const visitScore2=games.find(game=>game.gameNumber==gameNumber2).visitScore
+  const analogScore2=games.find(game=>game.gameNumber==gameNumber2).analogScore
+  const localTeam2=teams.find(t=>t._id==idTeamLocal2).name
+  const localFlag2=teams.find(t=>t._id==idTeamLocal2).flag
+  const visitTeam2=teams.find(t=>t._id==idTeamVisit2).name
+  const visitFlag2=teams.find(t=>t._id==idTeamVisit2).flag
+
+  data.push({gameNumber1, localTeam1, localFlag1, localScore1, analogScore1, visitScore1, visitFlag1, visitTeam1, gameNumber2, localTeam2, localFlag2, localScore2, analogScore2, visitScore2, visitFlag2, visitTeam2,localTeam2})
+
   return data
 }
 
@@ -214,6 +250,7 @@ return data
 
 // Controlador para los juegos por fases desde octavos hasta semifinal (phase 2, 3, 4)
 const getGameAndBetByPhase =async (phase, gamesPhase,idUser)=>{
+  try{
   const games= await Game.find().lean()
   const teams=await Team.find().lean()
   const betGames=await BetGame.find({idUser}).lean()
@@ -309,9 +346,15 @@ const getGameAndBetByPhase =async (phase, gamesPhase,idUser)=>{
   })
 return data
 }
+catch (err){
+  console.log('apuesta de fase actual no está completa')
+  return null
+}
+}
 
 //Controlador para los juegos de 3 y 4 y final (pase 5 y 6)
 const getGameAndBetFinal =async (phase, gameStruct, idUser)=>{
+try {
 const games= await Game.find().lean()
 const teams= await Team.find().lean()
 const betGames=await BetGame.find({idUser}).lean()
@@ -321,8 +364,6 @@ const idGame1=  games.find(g=>g.gameNumber==gameStruct[2])._id  // Id juego de t
 const gameNumber1=gameStruct[2]
 const idGame2=  games.find(g=>g.gameNumber==gameStruct[3])._id // Id juego final
 const gameNumber2= gameStruct[3]
-
-
 
 
 let localTeamId1=null, visitTeamId1=null, localTeamId2=null, visitTeamId2=null
@@ -412,6 +453,11 @@ totalScore2+=pointByWin2
 
    data.push({phase,idNextGame, gameNumber1, localTeamId1, localTeam1, localFlag1, visitTeamId1, visitTeam1, visitFlag1,gameNumber2, localTeamId2, localTeam2,localFlag2, visitTeamId2, visitTeam2, visitFlag2, idBet1, localScore1, visitScore1, analogScore1, earnedScore1, idBet2, localScore2, visitScore2, analogScore2, earnedScore2, betLocalTeam, betLocalFlag, betVisitTeam, betVisitFlag,pointByScore1, pointByAnalogScore1,pointByLocalEqual1,pointByVisitEqual1,totalScore1,pointByScore2,pointByAnalogScore2,pointByLocalEqual2,pointByVisitEqual2,totalScore2,pointByWin1,pointByWin2, renderPoint, rederPointVirtualGame})
 return data
+}
+catch(err){
+  console.log('apuesta de fase actual no está completa')
+  return null
+}
 }
 
 
@@ -667,4 +713,45 @@ for (group of iterator){
   return data
 }
 
-module.exports = {getGameAndBet, getBetClassificationByGroup, getGameAndBetByPhase, getGameAndBetFinal,  createGameThirdhAndFourth,  getPointGameGroup, getPointGamePhase, getPointClassification, getPointGamePhantom, sumTotalPoint,totalPointByGameGroups, totalPointByGamePhases, totalPointByClassification, totalPointByClassificationFinal, totalPointPhaseOne, totalPointPhaseTwo, greatTotal, getAllGamersPoint, dataForGeneralPoint, dataForTableGame, dataForTableClass, getGameByGroup,getGameByPhase}
+
+
+//COntrolador encargado de verificar si una phase esta complemtamemte diligenciada par dar paso a la sigueiknte fase y activar el menu correspondiente (esta funcion se usa comio un midleware en el contexto proinscipal)
+
+const verifyPhaseCompleted = async idUser=>{
+   let octavosCompleted=true, cuartosCompleted=true, semiCompleted=true
+// Verificacion de la phase octavos
+const gamesOctavos= await Game.find({phase:config.phaseEighth})
+const gamesCuartos = await Game.find({phase:config.phaseFourth})
+const gamesSemi = await Game.find({phase:config.phaseSemiFinals})
+const idOctavos=[]
+const idCuartos=[] 
+const idSemi=[]
+for (game of gamesOctavos){
+  idOctavos.push(game._id)
+}
+for (game of gamesCuartos){
+  idCuartos.push(game._id)
+}
+for (game of gamesSemi){
+  idSemi.push(game._id)
+}
+
+const betGames= await BetGame.find({idUser})
+
+for (idBet of idOctavos){
+  if ((betGames.find(b=>b.idGame==idBet).localScore)=='-1' ||(betGames.find(b=>b.idGame==idBet).visitScore)=='-1' ) octavosCompleted=false
+}
+
+for (idBet of idCuartos){
+  if ((betGames.find(b=>b.idGame==idBet).localScore)=='-1' ||(betGames.find(b=>b.idGame==idBet).visitScore)=='-1' ) cuartosCompleted=false
+}
+
+for (idBet of idSemi){
+  if ((betGames.find(b=>b.idGame==idBet).localScore)=='-1' ||(betGames.find(b=>b.idGame==idBet).visitScore)=='-1' ) semiCompleted=false
+}
+
+return {octavosCompleted, cuartosCompleted, semiCompleted}
+}
+
+
+module.exports = {getGameAndBet, getBetClassificationByGroup, getGameAndBetByPhase, getGameAndBetFinal,  createGameThirdhAndFourth,  getPointGameGroup, getPointGamePhase, getPointClassification, getPointGamePhantom, sumTotalPoint,totalPointByGameGroups, totalPointByGamePhases, totalPointByClassification, totalPointByClassificationFinal, totalPointPhaseOne, totalPointPhaseTwo, greatTotal, getAllGamersPoint, dataForGeneralPoint, dataForTableGame, dataForTableClass, getGameByGroup,getGameByPhase, getGameByPhaseFinal, verifyPhaseCompleted}

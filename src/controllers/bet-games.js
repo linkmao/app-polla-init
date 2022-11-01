@@ -69,20 +69,20 @@ const updateMeBetGameAndNextGame = async (req, res) => {
     await BetGame.findOneAndUpdate({ idUser: req.user.id, idGame: req.params.game }, { betLocalTeam: req.body.betLocalTeam, betVisitTeam: req.body.betVisitTeam })
   // Ademas del juego de ganadores creado (los elegidos por el usuario), si la pase es de semifinal se debe crear tambien el juego de perderores, para confromar así el juego de terceros y cuartos
   
-  if (req.params.phase==config.phaseEighth) res.redirect('/eighth')
-  if (req.params.phase==config.phaseFourth) res.redirect('/fourth')
+  if (req.params.phase==config.phaseEighth) res.redirect(`/eighth#${req.params.id}`)
+  if (req.params.phase==config.phaseFourth) res.redirect(`/fourth#${req.params.id}`)
   if(req.params.phase==config.phaseSemiFinals){
     await createGameThirdhAndFourth(req.user.id,config.finalStruct)
-    res.redirect('/semi')
+    res.redirect(`/semi#${req.params.id}`)
    }
-  if (req.params.phase==config.phaseFinal) res.redirect('/finals')
+  if (req.params.phase==config.phaseFinal) res.redirect(`/finals#${req.params.id}`)
 }
 
 const updateMeBetGameGroup = async (req, res) => {
   console.log("Actualizando grupo")
   const gameMeBetUpdate = await BetGame.findOneAndUpdate({ idUser: req.user.id, _id: req.params.id }, req.body, { new: true })
   const group = req.params.g
-  res.redirect(`/groups/${group}`)
+  res.redirect(`/groups/${group}#${req.params.id}`)
 }
 
 const updateBetGame = async (req, res) => {

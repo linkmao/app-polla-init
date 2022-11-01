@@ -46,12 +46,11 @@ const updateMeBetClassificationGroup = async (req, res) => {
   const group = req.params.g
   // console.log(req.params.id)
   if (group != "FINAL") {
-    res.redirect(`/groups/${group}`)
+    res.redirect(`/groups/${group}#class`)
   }
   else {
     res.redirect('/finals')
   }
-
 }
 
 

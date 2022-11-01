@@ -116,3 +116,32 @@ Para que estos dos ultimos juegos tengan la misma estructura de ganar 3 puntos s
     - forCalculate:true
 
     Es importante que localScore, analogScore y visitScore tengan valores no comparables con cualquier resultado posible
+
+
+
+# Apuntes técnicos para este y otros proyectos
+## Exportacion de la base de datos
+Cuando se desarrolla en local la base de datos tambien es en local, llevar esa base de datos a la nube, en este caso a mongo atlas se siguien los siguientes pasos
+
+1. Exportar la base de datos de local
+$ mongodump --db [name database]
+(esto me genera una carpeta dump y por dentro la carpeta con la base de datos exportada)
+(Se debe tener descargado mongodump.exe y prendido el servicio de la base de datos con mongod)
+
+2. Importar la base de datos en atlas
+Se ingresa a Mongo atlas y de la seccion Cmd Line Tools se toma la linea de comando necesaria para restaurar la bd, la cual tiene esta estructura
+$ mongorestore --uri mongodb+srv://maolink:<PASSWORD>@mongo-cluster.h360t.mongodb.net 
+(En <Paswword> se copia el password del cluster)
+
+y listo
+
+## Despliegue en Heroku (se debe tener instalado heroku cli, verificar con $ heroku --version)
+0. El proyecto debe estar con un commit completamente hecho
+1. Ingresar a heroku en la web
+2. Crear nueva app
+3. Crear las variables de entorno necesarias en heroku, especialmente la de la base de datos
+    En el cluster de ATLAS donde está la base de datos, se da en conect y se copia el uri
+    En Settings, Config Var de Heroku, se crea la variable de entorno
+4.  En package.json se debe tener el script "start": "node scr/index.js" o el necesario para ejecutar el index
+5. Hacer login en heroku
+    $ heroku login

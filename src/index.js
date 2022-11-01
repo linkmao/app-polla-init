@@ -17,6 +17,7 @@ const passport = require('passport') // Passport y sus dependencias auxiliares
 const session = require('express-session') // Passport y sus dependencias auxiliares
 const path = require('path') // para la obtencion de rutas del proyecto
 // const cors = require('cors');
+const {verifyPhaseCompleted}= require('./controllers/index')
 
 const app = express()
 
@@ -57,7 +58,16 @@ app.use(flash()) // Para el envio de mensajes
 app.use(passport.initialize()) // Para usa passport
 app.use(passport.session())  // para usar passport con session
 
-
+app.use(async (req, res, next)=>{
+  const data=req.user||null
+  if (data){
+  res.locals.octavosCompleted=(await  verifyPhaseCompleted(data._id)).octavosCompleted
+  res.locals.cuartosCompleted=(await  verifyPhaseCompleted(data._id)).cuartosCompleted
+  res.locals.semiCompleted=(await  verifyPhaseCompleted(data._id)).semiCompleted
+  console.log(res.locals.semiCompleted)
+  }
+  next()
+})
 
 
 // Variables locales, estas variables son datos que se envian desde el backend y que podrán usarse en el frontend, ntese que esto es un midleware, significa que esta infomacion se actualiza despues de cada peticion de las rutas

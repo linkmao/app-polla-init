@@ -22,6 +22,27 @@ const isAuth = (req, res, next) => {
     res.status(404).redirect('/')
 }
 
+// Valida si los equipos que se envian para elegor el orden de la clasificacion sean todos difernetes
+
+const isTeamDiferent=(req, res, next)=>{
+const {firstTeam, secondTeam, thirdTeam, fourthTeam}= req.body
+// Se realiza la comparación de 6 posibiidades de coincidencia con la primera que se cumpla se activa flag
+let isDiferent= true
+{firstTeam==secondTeam? isDiferent=false: isDiferent}
+{firstTeam==thirdTeam? isDiferent=false: isDiferent}
+{firstTeam==fourthTeam? isDiferent=false: isDiferent}
+{secondTeam==thirdTeam? isDiferent=false: isDiferent}
+{secondTeam==fourthTeam? isDiferent=false: isDiferent}
+{thirdTeam==fourthTeam? isDiferent=false: isDiferent}
+if (isDiferent) {next()} else
+{req.flash('mensajeError', 'La clasificación no ha sido guardada. Verificar que no se repitan equipos en la elección de la clasificación.')
+if (req.params.g!="FINAL")  
+{res.redirect(`/groups/${req.params.g}`)}  // Si es de grupos, se renderiza nuevamente el grupo
+else
+{res.redirect('/finals')} // Si no, entonces es de la fase final
+}
+}
+
 //VALIDANDO ADMIN USANDO EL TOKEN, POR EL MOMENTO INUTILIZADO
 // const isAdmin = async (req,res,next)=>{
 //     const user = await User.findById(req.userId)
@@ -81,4 +102,7 @@ const validityEmail = async (req, res, next) => {
 }
 
 
-module.exports = { isAuth, isAdmin, validityEmail, validyPass }
+
+
+
+module.exports = { isAuth, isAdmin, validityEmail, validyPass, isTeamDiferent }

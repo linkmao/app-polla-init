@@ -25,7 +25,7 @@ gamesSemi:[[61,62,64]],
 // virtualNextGame es un juego que no se da (el siguiente a la final) y solo es para que sirva como almacenamiento para el equipo ganador de la final y de terceros y cuartos y así poder dar puntaje por ellos como en el resto esquema de clasificaciones
 //[Juego-semifinal-1, juego-semifinal-2, juego-tercero-y-cuarto, juego-final, virtualNexGame]
 gamePhantom:65,
-finalStruct:[61,62,63,64,this.gamePhantom],
+finalStruct:[61,62,63,64,65],
 // Posicion de los diferents puntajes parciales en el array earnedScore del modelo betGames
 xPointByScore:0,
 xPointByAnalogScore:1,
