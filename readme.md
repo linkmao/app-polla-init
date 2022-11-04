@@ -119,6 +119,8 @@ Para que estos dos ultimos juegos tengan la misma estructura de ganar 3 puntos s
 
 
 
+# Fase de despliegue
+
 # Apuntes técnicos para este y otros proyectos
 ## Exportacion de la base de datos
 Cuando se desarrolla en local la base de datos tambien es en local, llevar esa base de datos a la nube, en este caso a mongo atlas se siguien los siguientes pasos
@@ -135,6 +137,17 @@ $ mongorestore --uri mongodb+srv://maolink:<PASSWORD>@mongo-cluster.h360t.mongod
 
 y listo
 
+## Despliegue en Heroku
+Para el despliegue hay dos formas de hacerlo.
+ Forma automática con Github
+ Forma Manual con Heroku Cli
+
+### Forma autómatica
+0. Hacer commit del proyecto y push a Github
+1. Loguearse en Heroku y crear proyecto
+2. Luego de crear proyecto, en Deployment method se elige Connect with Github
+3. Se elige el repositorio y la rama donde está el proyecto y listo.
+
 ## Despliegue en Heroku (se debe tener instalado heroku cli, verificar con $ heroku --version)
 0. El proyecto debe estar con un commit completamente hecho
 1. Ingresar a heroku en la web
@@ -150,3 +163,28 @@ y listo
     $ git add .
     $ git commit -m "Message"
     $ git push heroku master
+
+
+## Link de conexión a la base de datos
+En mongoDB atlas y luego de haber configurado la seccion security donde se coloca el nombre de usuario y la conttraseña para el acceso a las base de datos, se elije la opcion connect
+-   Connect your app
+-   Se copia toda la URI que presenta, a la cual hay que agregarle la contraseña y el nombre de la base de datos (si no se pone el nombre de la base de datos, el sisetma crea uno de nombre test)
+
+Nota: Mongo en las ultimas vesriones no muestra donde poner el nombre de la base de datos y por eso cuando la crea esta la llama test
+
+mongodb+srv://maolink:<password>@mongo-cluster.h360t.mongodb.net/?retryWrites=true&w=majority
+
+sin embargo, el nombre de la base de datos se puede ponder antes del ?
+
+mongodb+srv://maolink:<password>@mongo-cluster.h360t.mongodb.net/<bdname>?retryWrites=true&w=majority
+
+## Variable de entorno en heroku
+El link de la base de datos se debe llevar a la variable de entorno de heroku, cuando se accede por chrome extrañamente hay problemas en actualizar la información, así que se sugiere usar mozilla 
+--settings--reveals config vars
+
+Otra opcion es usar heroku cli, luego de haber hecho heroku login y usar la siguinete linea
+
+heroku config:set MONGODB_URI=mongodb+srv://maolink:<password>@mongo-cluster.h360t.mongodb.net/<bdname>?retryWrites=true&w=majority
+
+
+Con esto hecho.. es de esperarse que todo corra ok
