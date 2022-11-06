@@ -189,3 +189,5 @@ heroku config:set MONGODB_URI=mongodb+srv://maolink:<password>@mongo-cluster.h36
 
 
 Con esto hecho.. es de esperarse que todo corra ok
+
+Subiendo a railway
