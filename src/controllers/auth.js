@@ -1,18 +1,20 @@
-const passport = require('passport')
 const User = require ('../models/User')
 const Game = require('../models/Game')
 const Classification= require('../models/Classification')
 const BetClassification = require('../models/Bet-classification')
 const BetGame=require('../models/Bet-game')
-const config=require('../config/config')
-
-
+const Key = require('../models/Key')
 
 const signUp = async (req,res)=>{
-  const {email, pass, name, lastName, phone}= req.body
+  const {email, pass, name, lastName, phone, key}= req.body
   const newUser=new User({email, pass:await User.encryptPass(pass) , name, lastName, phone})
   await newUser.save()
 
+  // Se verifica la llave para validar la creación del usuario
+ const keys= await Key.find({keyCode:key, isUsed:false})
+ if (keys[0]!=null){
+  // Actualizo la key con el id del usuario registrado
+  await Key.findByIdAndUpdate(keys[0]._id,{idUser:newUser._id,isUsed:true},{new:true})
 // La siguiente seccion de codigo lo que hace es generar la estructura de la apuesta inicial para el jugador recien logueado, se espera el futuras versiones hacer esta implementacion en un midleware independinete
   
   // CREACION DE LOS DATOS PARA Bet-game
@@ -24,23 +26,28 @@ const signUp = async (req,res)=>{
   })
   
   // CREACION DE LOS DATOS PARA Bet-classification
-
    const classification = await Classification.find()
    classification.forEach(async e=>{
    const newBetClassification = new BetClassification({idUser:newUser._id, group:e.group, idClassification:e._id})
    await newBetClassification.save()
    })
 
-  
   req.flash('mensajeOk','Registro exitoso. Inicia sesión')
   res.status(200).redirect('/')    // Luego de registrado se redirige a la pnatalla principal para que haga loguin, sin empbargoo luego lo haré oara que inmediatamente ingrese a su app
+
+} else {
+  // Borro el usuario creado, pues no tiene la llave
+  await User.findByIdAndDelete(newUser._id)
+  req.flash('mensajeError','Llave no valida para registrarse')
+  res.status(200).redirect('/')
+}  
   
 }
 
 // VERSION DE CODIGO CON JWEBTOKEN
 
-// const jwt = require('jsonwebtoken')
-// const config = require('../config/config')
+const jwt = require('jsonwebtoken')
+const config = require('../config/config')
 
 // SIGNUOP USANDO LA ESTRATEGIA DEL TOKEN
 
@@ -57,27 +64,27 @@ const signUp = async (req,res)=>{
 // }
 
 
-// Signin usando token
-// const signIn = async (req, res)=>{
-//   const {email, pass}= req.body
-//   console.log(email, pass)
-//   const userFound= await User.findOne({email})
-//   if (!userFound) { 
-//    res.status(400).json({message:"Usuario no registrado"})
-//   }
-//   else {
-//     const matchPass = await User.comparePass(pass, userFound.pass)
-//     if (matchPass){
-//     const token = jwt.sign({id:userFound._id}, 
-//     config.secretword,
-//     {expiresIn:config.tokenDuration})  // Se configura para que el token solo dure un dia (puede ser menos)
-//     // Retorno el token
-//     res.status(200).json({token})
-//     }
-//     else
-//     res.status(200).json({message:"Contraseña incorrecta"})
-//   }
-// }
+// Signin usando token para e logueo del adminsitrador desde Postman
+const signInAdmin = async (req, res)=>{
+  const {email, pass}= req.body
+  console.log(email, pass)
+  const userFound= await User.findOne({email})
+  if (!userFound) { 
+   res.status(400).json({message:"Usuario no registrado"})
+  }
+  else {
+    const matchPass = await userFound.comparePass(pass, userFound.pass)
+    if (matchPass){
+    const token = jwt.sign({id:userFound._id}, 
+    config.secretword,
+    {expiresIn:config.tokenDuration})  // Se configura para que el token solo dure un dia (puede ser menos)
+    // Retorno el token
+    res.status(200).json({token})
+    }
+    else
+    res.status(200).json({message:"Contraseña incorrecta"})
+  }
+}
 
 
-module.exports =  {signUp}
+module.exports =  {signUp, signInAdmin}

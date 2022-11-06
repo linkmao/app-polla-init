@@ -5,7 +5,7 @@ const exphbs = require('express-handlebars') // Para el funcionamiento de handle
 const morgan = require('morgan')
 const teams = require('./routes/teams')
 const games = require('./routes/games')
-//const groups = require('./routes/groups')
+const keys = require('./routes/keys')
 const classifications = require('./routes/classifications')
 const users = require('./routes/users')
 const auth = require('./routes/auth')
@@ -76,7 +76,7 @@ app.use((req, res, next) => {
   res.locals.mensajeOk = req.flash('mensajeOk')
   res.locals.localUsuario = req.user || null // Se guarda el user que envia passport, y se guarda en una variable local
   res.locals.localBody=req.body || null
-  const temporal=res.locals.localBody
+  // const temporal=res.locals.localBody
   // console.log("BODY GUARDADO: ", temporal)
    // Cuando se quuiere acceder en handlebars a usuario.name, no permite su uso, entonces se guadan todos los datos de usuario en variables locales así como se muestra a continuación
   if (res.locals.localUsuario != null) {
@@ -109,7 +109,7 @@ app.use((req, res, next) => {
 app.use('/', index)
 app.use('/auth', auth)
 app.use('/api/teams', teams)
-// app.use('/api/groups', groups )
+app.use('/api/keys', keys )
 app.use('/api/games', games)
 app.use('/api/classifications', classifications)
 app.use('/api/users', users)

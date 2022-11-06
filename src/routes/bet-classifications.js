@@ -20,7 +20,7 @@ router.delete('/:id', validar.isAuth, validar.isAdmin, controller.deleteClassifi
 router.delete('/user/:iduser', validar.isAuth, validar.isAdmin, controller.deleteAllClassifitationsByIdUser) // Borrar todos las clasificaciones de un usuario dado por id, accede admin
 router.delete('/', validar.isAuth, validar.isAdmin, controller.deleteAllClassifications) //Borra las apuestas de todos los usuarios
 
-
+//VERSION SIN AUTENTICACION
 // router.get('/', controller.getAllClassifications) //obtiene todas los apuestas, accede cualquier usuario
 // router.get('/me/bet',  controller.getMeClassification) //obtiene todas las apuestas, usuario logueado
 // router.get('/:id', controller.getClassificationById)  //obtiene cualquier apuesta por id, cualquier user

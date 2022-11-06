@@ -149,6 +149,7 @@ Para el despliegue hay dos formas de hacerlo.
 3. Se elige el repositorio y la rama donde está el proyecto y listo.
 
 ## Despliegue en Heroku (se debe tener instalado heroku cli, verificar con $ heroku --version)
+(Aun no funcional por error debo verificar cual es el error para documentarlo)
 0. El proyecto debe estar con un commit completamente hecho
 1. Ingresar a heroku en la web
 2. Crear nueva app

@@ -15,6 +15,10 @@ router.post('/signin',passport.authenticate('local',{
   failureFlash:true
 }), (req,res)=> {req.flash('mensajeError','Usuario o contraseña no valido')})
 
+// Ruta que se accede solo por medio de postman para entrega de token
+router.post('/signin/admin', auth.signInAdmin)
+
+
 // Desde la version 0.6 de passport, se requiere de un callback para logout, tal como se muestra en este codigo
 router.get('/logout',(req,res, next)=>{
   req.logout(err=>{

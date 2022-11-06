@@ -1,19 +1,29 @@
-// const jwt= require ('jsonwebtoken')
-// const  config =require( '../config/config')
+const jwt= require ('jsonwebtoken')
+const  config =require( '../config/config')
 const User = require('../models/User')
+const Key = require('../models/Key')
 
 
 //VALIDACION USANDO TOKEN, POR EL MOMENTO SE OMITE
 
-//  const verifyToken = async (req,res,next)=>{
-//     const token= req.headers["x-access-token"]
-//     if (!token) return res.status(403).json({message:'Token no encontrado'})
-//     const decoded= jwt.verify(token, config.secretword)  // Al decodificar obtiene el id del usuario identificado
-//     req.userId = decoded.id  // Es importante guardar este dato en el req, para que los demás midlewares puedan acceder a ese valor desde req
-//     const user=await User.findById(req.userId, {password:0})  //{password:0 }- es para que el retorno del suaurio no tenga la contraseña
-//     if (!user) return res.status(404).json({message:'Usuario no existe'})
-//     next()
-// }
+ const verifyToken = async (req,res,next)=>{
+    const token= req.headers["x-access-token"]
+    if (!token) return res.status(403).json({message:'Token no encontrado'})
+    const decoded= jwt.verify(token, config.secretword)  // Al decodificar obtiene el id del usuario identificado
+    req.userId = decoded.id  // Es importante guardar este dato en el req, para que los demás midlewares puedan acceder a ese valor desde req
+    const user=await User.findById(req.userId, {password:0})  //{password:0 }- es para que el retorno del suaurio no tenga la contraseña
+    if (!user) return res.status(404).json({message:'Usuario no existe'})
+    next()
+}
+
+const isAdminToken = async (req,res,next)=>{
+    const user = await User.findById(req.userId)
+    console.log(user.role)
+    if (user.role!="admin")
+    return res.status(403).json({message:'No tienes privilegios de administarador para la operacion'})
+    next()
+}
+
 
 
 
@@ -58,6 +68,10 @@ const isAdmin = (req, res, next) => {
     next()
 }
 
+
+const isKeyUsed = (req, res, next)=>{
+    
+}
 
 // Valida que las dos contraseñas sean iguales al momento del registro
 
@@ -105,4 +119,4 @@ const validityEmail = async (req, res, next) => {
 
 
 
-module.exports = { isAuth, isAdmin, validityEmail, validyPass, isTeamDiferent }
+module.exports = { isAuth, isAdmin, validityEmail, validyPass, isTeamDiferent, verifyToken, isAdminToken }
