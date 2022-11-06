@@ -45,12 +45,10 @@ const signUp = async (req,res)=>{
 }
 
 // VERSION DE CODIGO CON JWEBTOKEN
-
 const jwt = require('jsonwebtoken')
 const config = require('../config/config')
 
 // SIGNUOP USANDO LA ESTRATEGIA DEL TOKEN
-
 // const signUp = async (req,res)=>{
 //   const {email, pass, name, lastName, phone}= req.body
 //   const newUser=new User({email, pass:await User.encryptPass(pass) , name, lastName, phone})
