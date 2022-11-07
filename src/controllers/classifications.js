@@ -19,12 +19,22 @@ const addClassification = async (req, res)=>{
   }
 
 const updateClassification  = async (req, res)=>{
-    const classificationUpdate = await Classification.findByIdAndUpdate(req.params.id, req.body,{new:true})
-    // Se guarda el grupo de la clasificacion que se está actualizando
-    const group=classificationUpdate.group
-    res.status(200).json(classificationUpdate)
-    // Si en el body envio forCalculate, me calcula los puntajes
-    if (req.body.forCalculate) await calculatePointByClassification(group)
+  switch (req.params.id) {
+    case 'reset-classification': // Se resetean todas las clasificaciones
+    const classifications = await Classification.find().lean()
+    for (classification of classifications ){
+      await Classification.findByIdAndUpdate(classification._id, {firstTeam:" ", secondTeam:" ", thirdTeam:" ", fourthTeam:" "},{new:true})
+      } 
+     res.status(200).json({message:"Todos las clasificaciones fueron reseteadas"})
+    break
+    default: // Actualizacion de cualquier clasificacion por id
+      const classificationUpdate = await Classification.findByIdAndUpdate(req.params.id, req.body,{new:true})
+      // Se guarda el grupo de la clasificacion que se está actualizando
+      const group=classificationUpdate.group
+      res.status(200).json(classificationUpdate)
+      // Si en el body envio forCalculate, me calcula los puntajes
+      if (req.body.forCalculate) await calculatePointByClassification(group)
+  }
   }
 
 const deleteClassification = async (req, res)=>{

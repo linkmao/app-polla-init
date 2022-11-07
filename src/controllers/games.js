@@ -1,4 +1,5 @@
 const Game = require('../models/Game')
+const config= require('../config/config')
 const {calculatePointByGame} = require('../logic/logic')
 
 const  getGames = async (req, res)=>{
@@ -34,10 +35,27 @@ const addGame = async (req, res)=>{
 // Solo si forCalculate es true, el sistema hace el calculo del los puntajes, y coloca el estado del partide played en true
 
 const updateGame  = async (req, res)=>{
-    const gameUpdate = await Game.findByIdAndUpdate(req.params.id, req.body,{new:true})
-    res.status(200).json(gameUpdate)
-    if (req.body.forCalculate) await calculatePointByGame(req.params.id) 
+     switch (req.params.id){
+      case 'reset-score': //  Se resetean TODOS los resultados insertados
+        const games1 = await Game.find().lean()
+        for (game of games1 ){
+         await Game.findByIdAndUpdate(game._id, {localScore:-1, visitScore:-1, analogScore:"-1", played:false},{new:true})
+         } 
+        res.status(200).json({message:"Todos los marcadores fueron reseteados"})
+      break
+      case 'reset-team-phases': //  Se resetean TODOS los equipos de las fases
+        const games2 = await Game.find().lean()
+        for (game of games2 ){
+          if (game.phase!=config.phaseInitial) await Game.findByIdAndUpdate(game._id, {localTeam:"GENERIC LOCAL TEAM", visitTeam:"GENERIC LOCAL TEAM"},{new:true})
+        }
+         res.status(200).json({message:"Todos los equipos de fases, reseteados"})
+      break
+      default: // Se actualiza el juego con id ingresado
+      const gameUpdate = await Game.findByIdAndUpdate(req.params.id, req.body,{new:true})
+      if (req.body.forCalculate) await calculatePointByGame(req.params.id) 
+      res.status(200).json(gameUpdate)
     }
+  }
 
 const deleteGame = async (req, res)=>{
         await Game.findByIdAndDelete(req.params.id)

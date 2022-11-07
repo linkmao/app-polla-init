@@ -2,7 +2,7 @@ const {Router}=require('express')
 const router = Router()
 const controller = require('../controllers/games.js')
 const validar = require('../midleware/validaciones')
-const Game = require('../models/Game')
+
 
 // Version con autenticacion con TOKEN via POSTMAN
 router.get('/', validar.verifyToken, controller.getGames )
